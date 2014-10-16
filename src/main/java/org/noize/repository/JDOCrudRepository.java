@@ -4,7 +4,7 @@
 **
 ** 
 */
-package org.magnum.mobilecloud.video.repository;
+package org.noize.repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;

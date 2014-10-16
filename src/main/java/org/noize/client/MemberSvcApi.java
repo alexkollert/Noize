@@ -1,8 +1,8 @@
-package org.magnum.mobilecloud.video.client;
+package org.noize.client;
 
 import java.util.Collection;
 
-import org.magnum.mobilecloud.video.repository.Member;
+import org.noize.repository.Member;
 
 import retrofit.http.Body;
 import retrofit.http.GET;

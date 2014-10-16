@@ -1,10 +1,10 @@
-package org.magnum.mobilecloud.video.controller;
+package org.noize.controller;
 
 import java.util.Collection;
 
-import org.magnum.mobilecloud.video.client.MemberSvcApi;
-import org.magnum.mobilecloud.video.repository.Member;
-import org.magnum.mobilecloud.video.repository.MemberRepository;
+import org.noize.client.MemberSvcApi;
+import org.noize.repository.Member;
+import org.noize.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

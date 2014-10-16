@@ -1,4 +1,4 @@
-package org.magnum.mobilecloud.video.repository;
+package org.noize.repository;
 
 import java.util.Collection;
 import java.util.List;

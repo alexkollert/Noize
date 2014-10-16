@@ -4,7 +4,7 @@
  **
  ** 
  */
-package org.magnum.mobilecloud.video;
+package org.noize;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

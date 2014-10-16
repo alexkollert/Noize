@@ -1,4 +1,4 @@
-package org.magnum.mobilecloud.integration.test;
+package org.noize.test;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,9 +6,9 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.magnum.mobilecloud.video.TestData;
-import org.magnum.mobilecloud.video.client.MemberSvcApi;
-import org.magnum.mobilecloud.video.repository.Member;
+import org.noize.client.MemberSvcApi;
+import org.noize.repository.Member;
+import org.noize.video.TestData;
 
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
@@ -34,7 +34,7 @@ import retrofit.RestAdapter.LogLevel;
  * @author jules
  *
  */
-public class VideoSvcClientApiTest {
+public class MemberSvcClientApiTest {
 
 	private final String TEST_URL = "http://localhost:8080";
 

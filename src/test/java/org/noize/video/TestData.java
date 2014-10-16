@@ -1,8 +1,8 @@
-package org.magnum.mobilecloud.video;
+package org.noize.video;
 
 import java.util.UUID;
 
-import org.magnum.mobilecloud.video.repository.Member;
+import org.noize.repository.Member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

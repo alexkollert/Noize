@@ -4,7 +4,7 @@
  **
  ** 
  */
-package org.magnum.mobilecloud.video.repository;
+package org.noize.repository;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;

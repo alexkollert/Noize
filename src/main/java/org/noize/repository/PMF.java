@@ -1,4 +1,4 @@
-package org.magnum.mobilecloud.video.repository;
+package org.noize.repository;
 
 /*************************************************************************
 * Copyright 2010 Jules White
