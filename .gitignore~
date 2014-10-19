@@ -1,0 +1,17 @@
+target
+.recommenders
+.metadata
+.gradle
+bin
+.DS_Store
+build
+.project
+.settings
+.classpath
+.private
+.idea
+*.iml
+coursera-submission
+Asgn1-VideoUp
+Asgn2-VideoLike
+
