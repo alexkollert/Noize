@@ -11,5 +11,6 @@ build
 .private
 .idea
 *.iml
+gwt-unitCache
 
-
+/test-classes/

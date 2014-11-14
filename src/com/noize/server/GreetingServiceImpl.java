@@ -1,5 +1,8 @@
 package com.noize.server;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+
 import com.noize.client.GreetingService;
 import com.noize.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -10,6 +13,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
+	
+	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory();
 
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
