@@ -1,2 +1,0 @@
-serviceClass: com.noize.client.GreetingService
-path: BAC092EB136418A1D2E384E3999F9996.gwt.rpc

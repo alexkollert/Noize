@@ -19,6 +19,25 @@ public class Member {
 	@Persistent
 	private String lastName;
 	
+	public Member(String firstname, String lastname){
+		this.firstName = firstname;
+		this.lastName = lastname;
+	}
 	
+	public String getFirstName(){
+		return this.firstName;
+	}
+	
+	public String getLastName(){
+		return this.lastName;
+	}
+	
+	public Long getId(){
+		return this.id;
+	}
+	
+	public void setFirstName(String str){
+		this.firstName = str;
+	}
 
 }

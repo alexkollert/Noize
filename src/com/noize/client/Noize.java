@@ -1,6 +1,5 @@
 package com.noize.client;
 
-import com.noize.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,10 +9,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -33,8 +29,8 @@ public class Noize implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+	private final DatabaseServiceAsync databaseService = GWT
+			.create(DatabaseService.class);
 
 	/**
 	 * This is the entry point method.
@@ -42,11 +38,14 @@ public class Noize implements EntryPoint {
 	public void onModuleLoad() {
 		final VerticalPanel mainPanel = new VerticalPanel();
 		final FlexTable memberTable = new FlexTable();
+		final TextBox fnamefield = new TextBox();
+		fnamefield.setText("Vorname");
 		final Button database = new Button("Datenbank");
 		final Button stats = new Button("Statistiken");
 		
 		RootPanel.get("welcome").add(database);
 		RootPanel.get("welcome").add(stats);
+		RootPanel.get("welcome").add(fnamefield); 
 		
 		database.addClickHandler(new ClickHandler() {
 			
@@ -55,6 +54,31 @@ public class Noize implements EntryPoint {
 				memberTable.setText(0, 0, "Hallo");
 				mainPanel.add(memberTable);
 				RootPanel.get("welcome").add(mainPanel);
+				
+			}
+		});
+		
+		fnamefield.addKeyUpHandler(new KeyUpHandler() {
+			
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
+					databaseService.addMember("Alexander", "Kollert", new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							System.out.println("Server Error");
+							
+						}
+
+						@Override
+						public void onSuccess(String result) {
+							System.out.println("Success");
+							
+						}
+					});
+				}
+					
 				
 			}
 		});
