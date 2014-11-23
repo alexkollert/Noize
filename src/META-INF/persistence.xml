@@ -6,7 +6,7 @@
 
     <persistence-unit name="transactions-optional">
        <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-       <class>com.noize.server.Member</class>
+       <!-- <class>com.noize.server.Member</class> -->
         <properties>
             <property name="datanucleus.NontransactionalRead" value="true"/>
             <property name="datanucleus.NontransactionalWrite" value="true"/>

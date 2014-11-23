@@ -2,17 +2,8 @@ package com.noize.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -29,59 +20,72 @@ public class Noize implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final DatabaseServiceAsync databaseService = GWT
-			.create(DatabaseService.class);
+//	private final DatabaseServiceAsync databaseService = GWT
+//			.create(DatabaseService.class);
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		final VerticalPanel mainPanel = new VerticalPanel();
-		final FlexTable memberTable = new FlexTable();
-		final TextBox fnamefield = new TextBox();
-		fnamefield.setText("Vorname");
-		final Button database = new Button("Datenbank");
-		final Button stats = new Button("Statistiken");
+		GWT.log("Loading module");
+		final DatabaseServiceAsync databaseService = GWT
+				.create(DatabaseService.class);
+		HandlerManager eventbus = new HandlerManager(null);
+		AppController appViewer = new AppController(databaseService, eventbus);
+		appViewer.go(RootPanel.get());
 		
-		RootPanel.get("welcome").add(database);
-		RootPanel.get("welcome").add(stats);
-		RootPanel.get("welcome").add(fnamefield); 
 		
-		database.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				memberTable.setText(0, 0, "Hallo");
-				mainPanel.add(memberTable);
-				RootPanel.get("welcome").add(mainPanel);
-				
-			}
-		});
 		
-		fnamefield.addKeyUpHandler(new KeyUpHandler() {
-			
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
-					databaseService.addMember("Alexander", "Kollert", new AsyncCallback<String>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							System.out.println("Server Error");
-							
-						}
-
-						@Override
-						public void onSuccess(String result) {
-							System.out.println("Success");
-							
-						}
-					});
-				}
-					
-				
-			}
-		});
+		
+//		final VerticalPanel mainPanel = new VerticalPanel();
+//		final FlexTable memberTable = new FlexTable();
+//		final TextBox fnamefield = new TextBox();
+//		fnamefield.setText("Vorname");
+//		final Button database = new Button("Datenbank");
+//		final Button stats = new Button("Statistiken");
+//		
+//		RootPanel.get("welcome").add(database);
+//		RootPanel.get("welcome").add(stats);
+//		RootPanel.get("welcome").add(fnamefield); 
+//		
+//		database.addClickHandler(new ClickHandler() {
+//			
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				memberTable.setText(0, 0, "Hallo");
+//				mainPanel.add(memberTable);
+//				RootPanel.get("welcome").add(mainPanel);
+//				
+//			}
+//		});
+//		
+//		fnamefield.addKeyUpHandler(new KeyUpHandler() {
+//			
+//			@Override
+//			public void onKeyUp(KeyUpEvent event) {
+//				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
+//					databaseService.addMember("Alexander", "Kollert", new AsyncCallback<String>() {
+//
+//						@Override
+//						public void onFailure(Throwable caught) {
+//							System.out.println("Server Error");
+//							
+//						}
+//
+//						@Override
+//						public void onSuccess(String result) {
+//							System.out.println("Success");
+//							
+//						}
+//					});
+//				}
+//					
+//				
+//			}
+//		});
+		
+		
+		// _______________________________________________________________________________________
 		
 //		class MyHandler implements ClickHandler{
 //

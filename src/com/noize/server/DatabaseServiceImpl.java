@@ -1,14 +1,15 @@
 package com.noize.server;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import com.noize.client.DatabaseService;
-import com.google.appengine.api.utils.SystemProperty;
+import com.noize.shared.Member;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -18,9 +19,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		DatabaseService {
 	
-	private static PersistenceManagerFactory PMF;
+	private static PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
-	public String addMember(String firstname, String lastname) throws IllegalArgumentException {
+	public Member addMember(String firstname, String lastname) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 //		if (!FieldVerifier.isValidName(input)) {
 //			// If the input is not valid, throw an IllegalArgumentException back to
@@ -41,11 +42,11 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 //		      properties.put("javax.jdo.option.ConnectionURL",
 //		          System.getProperty("cloudsql.url.dev"));
 //		    }
-		PMF =  JDOHelper.getPersistenceManagerFactory("transactions-optional");
 		    
 		PersistenceManager pm = getPersistenceManager();
+		Member m = new Member(firstname,lastname);
 		try {
-			pm.makePersistent(new Member(firstname,lastname));
+			pm.makePersistent(m);
 		}
 		finally{
 			pm.close();
@@ -58,7 +59,30 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		firstname = escapeHtml(firstname);
 		userAgent = escapeHtml(userAgent);
 
-		return firstname + lastname + "added to Database";
+		return m;
+	}
+	
+	@Override
+	public boolean deleteMember(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public ArrayList<Member> getMembers() {
+		ArrayList<Member> list = new ArrayList<Member>();
+		PersistenceManager pm = getPersistenceManager();
+		try {
+			Extent<Member> e = pm.getExtent(Member.class);
+			Iterator<Member> iter = e.iterator();
+			while(iter.hasNext()){
+				list.add((Member) iter.next());
+			}
+		} 
+		finally {
+			pm.close();
+		}
+		return list;
 	}
 
 	/**

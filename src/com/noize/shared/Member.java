@@ -1,4 +1,4 @@
-package com.noize.server;
+package com.noize.shared;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -6,8 +6,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
-public class Member {
+public class Member implements IsSerializable{
 	
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
@@ -18,6 +21,10 @@ public class Member {
 	
 	@Persistent
 	private String lastName;
+	
+	public Member() {
+		
+	}
 	
 	public Member(String firstname, String lastname){
 		this.firstName = firstname;
