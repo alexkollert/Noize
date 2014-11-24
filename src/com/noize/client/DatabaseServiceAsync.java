@@ -12,4 +12,5 @@ public interface DatabaseServiceAsync {
 	void addMember(String name, String lastname, AsyncCallback<Member> callback);
 	void deleteMember(String id,AsyncCallback<Boolean> callback);
 	void getMembers(AsyncCallback<ArrayList<Member>> callback);
+	void updateMember(Member m, AsyncCallback<Boolean> callback);
 }

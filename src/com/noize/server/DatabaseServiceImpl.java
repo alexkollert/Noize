@@ -63,6 +63,19 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
+	public boolean updateMember(Member m) {
+		PersistenceManager pm = getPersistenceManager();
+		try {
+//			Member res = (Member) pm.getObjectById(m);
+			pm.deletePersistent(m);
+			pm.makePersistent(m);
+		} finally{
+			pm.close();
+		}
+		return true;
+	}
+	
+	@Override
 	public boolean deleteMember(String id) {
 		// TODO Auto-generated method stub
 		return false;

@@ -16,4 +16,6 @@ public interface DatabaseService extends RemoteService {
 	boolean deleteMember(String id);
 
 	ArrayList<Member> getMembers();
+	
+	boolean updateMember(Member m);
 }

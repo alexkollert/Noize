@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,6 +47,16 @@ public class EditMemberView extends Composite implements Display{
 	
 	public Widget asWidget() {
 		return this;
+	}
+
+	@Override
+	public HasValue<String> getFirstName() {
+		return firstName;
+	}
+
+	@Override
+	public HasValue<String> getLastName() {
+		return lastName;
 	}
 
 }

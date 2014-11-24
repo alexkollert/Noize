@@ -9,6 +9,8 @@ import com.noize.client.events.AddMemberEvent;
 import com.noize.client.events.AddMemberEventHandler;
 import com.noize.client.events.DeleteMemberEvent;
 import com.noize.client.events.DeleteMemberEventHandler;
+import com.noize.client.events.MemberUpdatedEvent;
+import com.noize.client.events.MemberUpdatedEventHandler;
 import com.noize.client.presenter.EditMemberPresenter;
 import com.noize.client.presenter.MembersPresenter;
 import com.noize.client.presenter.Presenter;
@@ -37,6 +39,9 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			}
 			else if(token.equals("add")){
 				presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView());
+			}
+			else if(token.equals("edit")){
+				presenter = new EditMemberPresenter(rpcService,eventbus,new EditMemberView());
 			}
 			
 			
@@ -73,6 +78,20 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 				doDeleteMember();	
 			}
 		});
+		eventbus.addHandler(MemberUpdatedEvent.TYPE, new MemberUpdatedEventHandler() {
+			
+			@Override
+			public void onMemberUpdated() {
+				doMemberUpdated();
+				
+			}
+		});
+	}
+
+
+	private void doMemberUpdated() {
+		History.newItem("list");
+		
 	}
 
 

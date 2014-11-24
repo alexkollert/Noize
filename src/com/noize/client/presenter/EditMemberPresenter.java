@@ -4,9 +4,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
+import com.noize.client.events.MemberUpdatedEvent;
 import com.noize.shared.Member;
 
 public class EditMemberPresenter implements Presenter {
@@ -19,6 +23,8 @@ public class EditMemberPresenter implements Presenter {
 	public interface Display {
 		HasClickHandlers getSaveButton();
 		HasClickHandlers getCancelButton();
+		HasValue<String> getFirstName();
+		HasValue<String> getLastName();
 		Widget asWidget();
 	}
 	
@@ -26,7 +32,7 @@ public class EditMemberPresenter implements Presenter {
 		this.rpcService = rpcService;
 		this.eventbus = eventbus;
 		this.display = view;
-		this.member = new Member();
+//		this.member = new Member();
 		bind();
 	}
 
@@ -56,7 +62,22 @@ public class EditMemberPresenter implements Presenter {
 	}
 
 	private void doSave() {
-		// TODO Auto-generated method stub
+//		member = new Member(display.getFirstName().getValue(), display.getLastName().getValue());
+		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(), new AsyncCallback<Member>() {
+			
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Fehler beim Bearbeiten!");
+			}
+
+
+			@Override
+			public void onSuccess(Member result) {
+				eventbus.fireEvent(new MemberUpdatedEvent());
+				
+			}
+		});
 		
 	}
 
