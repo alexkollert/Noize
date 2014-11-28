@@ -10,6 +10,7 @@ import javax.jdo.PersistenceManagerFactory;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.Member;
+import com.noize.shared.MemberSmall;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -21,7 +22,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	
 	private static PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
-	public Member addMember(String firstname, String lastname) throws IllegalArgumentException {
+	public Member addMember(String firstname, String lastname, String email) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 //		if (!FieldVerifier.isValidName(input)) {
 //			// If the input is not valid, throw an IllegalArgumentException back to
@@ -44,9 +45,12 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 //		    }
 		    
 		PersistenceManager pm = getPersistenceManager();
-		Member m = new Member(firstname,lastname);
+		Member m = new Member(firstname,lastname,email);
+		MemberSmall ms = new MemberSmall(firstname + " " + lastname);
+		m.setMemberSmall(ms);
 		try {
 			pm.makePersistent(m);
+//			pm.makePersistent(ms);
 		}
 		finally{
 			pm.close();
@@ -82,16 +86,16 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public ArrayList<Member> getMembers() {
-		ArrayList<Member> list = new ArrayList<Member>();
+	public ArrayList<MemberSmall> getMembersSmall() {
+		ArrayList<MemberSmall> list = new ArrayList<>();
 		PersistenceManager pm = getPersistenceManager();
 		try {
-			Extent<Member> e = pm.getExtent(Member.class);
-			Iterator<Member> iter = e.iterator();
+			Extent<MemberSmall> e = pm.getExtent(MemberSmall.class);
+			Iterator<MemberSmall> iter = e.iterator();
 			while(iter.hasNext()){
-				list.add((Member) iter.next());
+				list.add((MemberSmall) iter.next());
 			}
-		} 
+		}
 		finally {
 			pm.close();
 		}

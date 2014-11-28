@@ -17,18 +17,26 @@ public class Member implements IsSerializable{
 	private Long id;
 	
 	@Persistent
+	private MemberSmall smallmember;
+
+	@Persistent
 	private String firstName;
 	
 	@Persistent
 	private String lastName;
 	
+	@Persistent
+	private String email;
+	
+	
 	public Member() {
 		
 	}
 	
-	public Member(String firstname, String lastname){
+	public Member(String firstname, String lastname, String email){
 		this.firstName = firstname;
 		this.lastName = lastname;
+		this.email = email;
 	}
 	
 	public String getFirstName(){
@@ -46,5 +54,16 @@ public class Member implements IsSerializable{
 	public void setFirstName(String str){
 		this.firstName = str;
 	}
+	
+	public String getEmail(){
+		return this.email;
+	}
+	
+	public MemberSmall getMemberSmall(){
+		return this.smallmember;
+	}
 
+	public void setMemberSmall(MemberSmall m){
+		this.smallmember = m;
+	}
 }

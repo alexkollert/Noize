@@ -1,5 +1,6 @@
 package com.noize.client.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -15,14 +16,18 @@ import com.noize.client.presenter.MembersPresenter.Display;
 public class MembersView extends Composite implements Display{
 	private final Button addButton;
 	private final Button deleteButton;
-	private FlexTable contactsTable;
+	private FlexTable membersTable;
 	private final FlexTable contentTable;
 	
 	public MembersView() {
 		DecoratorPanel memListdeco = new DecoratorPanel();
 		initWidget(memListdeco);
+//		memListdeco.setWidth("100%");
 		
 		contentTable = new FlexTable();
+//		contentTable.setWidth("100%");
+//		contentTable.getCellFormatter().setWidth(0, 0, "100%");
+//		contentTable.getCellFormatter().setVerticalAlignment(0, 0, DockPanel.ALIGN_TOP);
 		
 		HorizontalPanel hpanel = new HorizontalPanel();
 		addButton = new Button("Neu");
@@ -31,19 +36,20 @@ public class MembersView extends Composite implements Display{
 		hpanel.add(deleteButton);
 		contentTable.setWidget(0, 0, hpanel);
 		
-		contactsTable = new FlexTable();
-		contactsTable.setWidth("100%");
+		membersTable = new FlexTable();
+//		contactsTable.setWidth("100%");
+//		contactsTable.getColumnFormatter().setWidth(0, "15px");
 //		contactsTable.addStyleName("contacts-ListContents");
-		contentTable.setWidget(1, 0, contactsTable);
+		contentTable.setWidget(1, 0, membersTable);
 		
 		memListdeco.add(contentTable);
 	}
 	
 	public void setData(List<String> data) {
-		contactsTable.removeAllRows();
+		membersTable.removeAllRows();
 		for(int i = 0;i < data.size();i++){
-			contactsTable.setWidget(i, 0, new CheckBox());
-			contactsTable.setText(i, 1, data.get(i));
+			membersTable.setWidget(i, 0, new CheckBox());
+			membersTable.setText(i, 1, data.get(i));
 		}
 	}
 
@@ -60,6 +66,18 @@ public class MembersView extends Composite implements Display{
 	@Override
 	public Widget asWidget() {
 		return this;
+	}
+
+	@Override
+	public List<Integer> getSelectedRows() {
+		List<Integer> selectedRows = new ArrayList<Integer>();
+		for(int i = 0;i < membersTable.getRowCount(); i++){
+			CheckBox checkbox = (CheckBox) membersTable.getWidget(i, 0);
+			if(checkbox.getValue()){
+				selectedRows.add(i);
+			}
+		}
+		return selectedRows;
 	}
 	
 

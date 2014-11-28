@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
@@ -18,13 +19,14 @@ public class EditMemberPresenter implements Presenter {
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
 	private final Display display;
-	private Member member;
+//	private Member member;
 	
 	public interface Display {
 		HasClickHandlers getSaveButton();
 		HasClickHandlers getCancelButton();
 		HasValue<String> getFirstName();
 		HasValue<String> getLastName();
+		HasValue<String> getEmail();
 		Widget asWidget();
 	}
 	
@@ -42,7 +44,6 @@ public class EditMemberPresenter implements Presenter {
 			@Override
 			public void onClick(ClickEvent event) {
 				doSave();
-				
 			}
 		});
 		display.getCancelButton().addClickHandler(new ClickHandler() {
@@ -50,20 +51,18 @@ public class EditMemberPresenter implements Presenter {
 			@Override
 			public void onClick(ClickEvent event) {
 				doCancel();
-				
 			}
 		});
 		
 	}
 
 	private void doCancel() {
-		// TODO Auto-generated method stub
-		
+		History.newItem("list");
 	}
 
 	private void doSave() {
 //		member = new Member(display.getFirstName().getValue(), display.getLastName().getValue());
-		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(), new AsyncCallback<Member>() {
+		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(),display.getEmail().getValue(), new AsyncCallback<Member>() {
 			
 			
 			@Override
@@ -75,7 +74,6 @@ public class EditMemberPresenter implements Presenter {
 			@Override
 			public void onSuccess(Member result) {
 				eventbus.fireEvent(new MemberUpdatedEvent());
-				
 			}
 		});
 		

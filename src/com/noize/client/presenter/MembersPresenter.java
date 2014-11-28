@@ -3,6 +3,7 @@ package com.noize.client.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -13,12 +14,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.AddMemberEvent;
-import com.noize.client.events.DeleteMemberEvent;
 import com.noize.shared.Member;
+import com.noize.shared.MemberSmall;
 
 public class MembersPresenter implements Presenter{
 	
-	private List<Member> members;
+	private List<MemberSmall> members;
 	
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
@@ -28,6 +29,7 @@ public class MembersPresenter implements Presenter{
 		HasClickHandlers getDeleteButton();
 		HasClickHandlers getAddButton();
 		void setData(List<String> data);
+		List<Integer> getSelectedRows();
 		Widget asWidget();
 	}
 	
@@ -50,10 +52,17 @@ public class MembersPresenter implements Presenter{
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				eventbus.fireEvent(new DeleteMemberEvent());
+				deleteSelectedMembers();
 			}
 		});
 		
+	}
+
+	private void deleteSelectedMembers() {
+		List<Integer> selectedRows = display.getSelectedRows();
+		for(int i = 0; i < selectedRows.size();i++){
+//			Member m = members.get(index)
+		}
 	}
 
 	@Override
@@ -65,14 +74,16 @@ public class MembersPresenter implements Presenter{
 	}
 
 	private void fetchMembers() {
-		rpcService.getMembers(new AsyncCallback<ArrayList<Member>>() {
+		GWT.log("run fetchMembers() in MembersPresenter");
+		rpcService.getMembersSmall(new AsyncCallback<ArrayList<MemberSmall>>() {
 			
 			@Override
-			public void onSuccess(ArrayList<Member> result) {
+			public void onSuccess(ArrayList<MemberSmall> result) {
+//				GWT.log("getMembers() returned: " + );
 				members = result;
 				ArrayList<String> data = new ArrayList<String>();
-				for(int i = 0;i < data.size();i++){
-					members.get(i).getFirstName();
+				for(int i = 0;i < members.size();i++){
+					data.add(members.get(i).getDisplayName());
 				}
 				display.setData(data);
 			}
@@ -85,7 +96,5 @@ public class MembersPresenter implements Presenter{
 		});
 		
 	}
-	
-	
 	
 }

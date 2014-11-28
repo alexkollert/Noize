@@ -88,16 +88,12 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 		});
 	}
 
-
 	private void doMemberUpdated() {
 		History.newItem("list");
-		
 	}
 
-
-	protected void doDeleteMember() {
+	private void doDeleteMember() {
 		History.newItem("list");
-		
 	}
 
 	private void doAddMember() {

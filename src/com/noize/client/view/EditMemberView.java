@@ -14,6 +14,7 @@ public class EditMemberView extends Composite implements Display{
 	
 	private final TextBox firstName;
 	private final TextBox lastName;
+	private final TextBox email;
 	private final Button saveButton;
 	private final Button cancelButton;
 	
@@ -23,12 +24,14 @@ public class EditMemberView extends Composite implements Display{
 		
 		firstName = new TextBox();
 		lastName = new TextBox();
+		email = new TextBox();
 		
 		HorizontalPanel hpanel = new HorizontalPanel();
 		saveButton = new Button("Speichern");
 		cancelButton = new Button("Abbrechen");
 		hpanel.add(firstName);
 		hpanel.add(lastName);
+		hpanel.add(email);
 		hpanel.add(saveButton);
 		hpanel.add(cancelButton);
 		
@@ -58,5 +61,12 @@ public class EditMemberView extends Composite implements Display{
 	public HasValue<String> getLastName() {
 		return lastName;
 	}
+
+	@Override
+	public HasValue<String> getEmail() {
+		return email;
+	}
+	
+	
 
 }
