@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.AddMemberEvent;
-import com.noize.shared.Member;
+import com.noize.client.events.DeleteMemberEvent;
 import com.noize.shared.MemberSmall;
 
 public class MembersPresenter implements Presenter{
@@ -52,17 +52,35 @@ public class MembersPresenter implements Presenter{
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				deleteSelectedMembers();
+				boolean ok = false;
+				ok = Window.confirm("Löschen bestätigen");
+				if(ok)
+					deleteSelectedMembers();
 			}
 		});
 		
 	}
 
 	private void deleteSelectedMembers() {
+		ArrayList<Long> ids = new ArrayList<Long>();
 		List<Integer> selectedRows = display.getSelectedRows();
 		for(int i = 0; i < selectedRows.size();i++){
-//			Member m = members.get(index)
+			ids.add(members.get(selectedRows.get(i)).getId());
 		}
+		rpcService.deleteMember(ids, new AsyncCallback<Boolean>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Löschen fehlgeschlagen");
+				
+			}
+
+			@Override
+			public void onSuccess(Boolean result) {
+				eventbus.fireEvent(new DeleteMemberEvent());
+				
+			}
+		});
 	}
 
 	@Override

@@ -17,6 +17,10 @@ import com.noize.client.presenter.Presenter;
 import com.noize.client.view.EditMemberView;
 import com.noize.client.view.MembersView;
 
+/**
+ * This Controller manages History and Events
+ *
+ */
 public class AppController implements Presenter,ValueChangeHandler<String> {
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;

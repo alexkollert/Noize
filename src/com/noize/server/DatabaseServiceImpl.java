@@ -7,6 +7,7 @@ import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.Member;
@@ -45,23 +46,28 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 //		    }
 		    
 		PersistenceManager pm = getPersistenceManager();
-		Member m = new Member(firstname,lastname,email);
+		pm.currentTransaction().begin();
 		MemberSmall ms = new MemberSmall(firstname + " " + lastname);
-		m.setMemberSmall(ms);
+		Member m = new Member(firstname,lastname,email);
+		ms.setFullMember(m);
 		try {
-			pm.makePersistent(m);
+			pm.makePersistent(ms);
 //			pm.makePersistent(ms);
+			pm.currentTransaction().commit();
+		}
+		catch(Exception e){
+			pm.currentTransaction().rollback();
 		}
 		finally{
 			pm.close();
 		}
 		
-		String serverInfo = getServletContext().getServerInfo();
-		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
+//		String serverInfo = getServletContext().getServerInfo();
+//		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
 
 		// Escape data from the client to avoid cross-site script vulnerabilities.
-		firstname = escapeHtml(firstname);
-		userAgent = escapeHtml(userAgent);
+//		firstname = escapeHtml(firstname);
+//		userAgent = escapeHtml(userAgent);
 
 		return m;
 	}
@@ -80,8 +86,21 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public boolean deleteMember(String id) {
-		// TODO Auto-generated method stub
+	public boolean deleteMember(ArrayList<Long> ids) {
+		PersistenceManager pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try {
+			for(Long id : ids){
+				Query q = pm.newQuery(MemberSmall.class, "id == " + id);
+				q.deletePersistentAll();
+			}
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+			pm.currentTransaction().rollback();
+		}
+		finally{
+			pm.close();
+		}
 		return false;
 	}
 	
@@ -89,8 +108,8 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<MemberSmall> getMembersSmall() {
 		ArrayList<MemberSmall> list = new ArrayList<>();
 		PersistenceManager pm = getPersistenceManager();
+		Extent<MemberSmall> e = pm.getExtent(MemberSmall.class);
 		try {
-			Extent<MemberSmall> e = pm.getExtent(MemberSmall.class);
 			Iterator<MemberSmall> iter = e.iterator();
 			while(iter.hasNext()){
 				list.add((MemberSmall) iter.next());

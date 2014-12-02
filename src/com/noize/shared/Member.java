@@ -1,23 +1,25 @@
 package com.noize.shared;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 
-@PersistenceCapable(identityType=IdentityType.APPLICATION)
+/**
+ * This Entity is child of MemberSmall and contains all Information
+ * about a Member. 
+ *
+ */
+@PersistenceCapable
 public class Member implements IsSerializable{
 	
-	@PrimaryKey
-	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
-	private Long id;
+//	@PrimaryKey
+//	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
+//	private Long id;
 	
-	@Persistent
-	private MemberSmall smallmember;
+//	@Persistent
+//	private MemberSmall smallmember;
 
 	@Persistent
 	private String firstName;
@@ -47,9 +49,9 @@ public class Member implements IsSerializable{
 		return this.lastName;
 	}
 	
-	public Long getId(){
-		return this.id;
-	}
+//	public Long getId(){
+//		return this.id;
+//	}
 	
 	public void setFirstName(String str){
 		this.firstName = str;
@@ -59,11 +61,11 @@ public class Member implements IsSerializable{
 		return this.email;
 	}
 	
-	public MemberSmall getMemberSmall(){
-		return this.smallmember;
-	}
-
-	public void setMemberSmall(MemberSmall m){
-		this.smallmember = m;
-	}
+//	public MemberSmall getMemberSmall(){
+//		return this.smallmember;
+//	}
+//
+//	public void setMemberSmall(MemberSmall m){
+//		this.smallmember = m;
+//	}
 }

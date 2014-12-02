@@ -12,7 +12,7 @@ import com.noize.shared.MemberSmall;
 public interface DatabaseServiceAsync {
 	void addMember(String name, String lastname, String email,
 			AsyncCallback<Member> callback);
-	void deleteMember(String id,AsyncCallback<Boolean> callback);
+	void deleteMember(ArrayList<Long> ids, AsyncCallback<Boolean> callback);
 	void getMembersSmall(AsyncCallback<ArrayList<MemberSmall>> asyncCallback);
 	void updateMember(Member m, AsyncCallback<Boolean> callback);
 }

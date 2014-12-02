@@ -14,7 +14,7 @@ import com.noize.shared.MemberSmall;
 public interface DatabaseService extends RemoteService {
 	Member addMember(String name, String lastname,String email);
 
-	boolean deleteMember(String id);
+	boolean deleteMember(ArrayList<Long> ids);
 
 	ArrayList<MemberSmall> getMembersSmall();
 	
