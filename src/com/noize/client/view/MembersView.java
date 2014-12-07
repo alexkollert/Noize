@@ -10,16 +10,53 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.presenter.MembersPresenter.Display;
 
 public class MembersView extends Composite implements Display{
+	
 	private final Button addButton;
 	private final Button deleteButton;
+	private final Button editButton;
 	private FlexTable membersTable;
 	private final FlexTable contentTable;
 	
+	public class MembersTableRow extends Composite {
+//		private CheckBox checkbox;
+		private Label text;
+//		private Button edit;
+		
+		public MembersTableRow() {
+			HorizontalPanel hp = new HorizontalPanel();
+			initWidget(hp);
+			
+//			checkbox = new CheckBox();
+			text = new Label();
+//			edit = new Button("Bearbeiten");
+			
+//			hp.add(checkbox);
+			hp.add(text);
+//			hp.add(edit);
+		}
+		
+		public void setText(String text){
+			this.text.setText(text);
+		}
+		
+		@Override
+		public Widget asWidget() {
+			return this;
+		}
+		
+//		public HasClickHandlers getEditButton(){
+//			return this.edit;
+//		}
+
+	}
+	
 	public MembersView() {
+		
 		DecoratorPanel memListdeco = new DecoratorPanel();
 		initWidget(memListdeco);
 //		memListdeco.setWidth("100%");
@@ -32,11 +69,14 @@ public class MembersView extends Composite implements Display{
 		HorizontalPanel hpanel = new HorizontalPanel();
 		addButton = new Button("Neu");
 		deleteButton = new Button("Löschen");
+		editButton = new Button("Bearbeiten");
 		hpanel.add(addButton);
 		hpanel.add(deleteButton);
+		hpanel.add(editButton);
 		contentTable.setWidget(0, 0, hpanel);
 		
 		membersTable = new FlexTable();
+//		membersTable.addClickHandler(new TableMouseEvent(rpcService, eventbus,container));
 //		contactsTable.setWidth("100%");
 //		contactsTable.getColumnFormatter().setWidth(0, "15px");
 //		contactsTable.addStyleName("contacts-ListContents");
@@ -48,8 +88,10 @@ public class MembersView extends Composite implements Display{
 	public void setData(List<String> data) {
 		membersTable.removeAllRows();
 		for(int i = 0;i < data.size();i++){
+			MembersTableRow row = new MembersTableRow();
+			row.setText(data.get(i));
 			membersTable.setWidget(i, 0, new CheckBox());
-			membersTable.setText(i, 1, data.get(i));
+			membersTable.setWidget(i, 1, row);
 		}
 	}
 
@@ -78,6 +120,11 @@ public class MembersView extends Composite implements Display{
 			}
 		}
 		return selectedRows;
+	}
+
+	@Override
+	public HasClickHandlers getEditButton() {
+		return editButton;
 	}
 	
 

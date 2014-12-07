@@ -2,6 +2,7 @@ package com.noize.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
@@ -11,7 +12,6 @@ import javax.jdo.Query;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.Member;
-import com.noize.shared.MemberSmall;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -23,7 +23,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	
 	private static PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
-	public Member addMember(String firstname, String lastname, String email) throws IllegalArgumentException {
+	public Member addMember(String firstname, String lastname, String email,String role) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 //		if (!FieldVerifier.isValidName(input)) {
 //			// If the input is not valid, throw an IllegalArgumentException back to
@@ -47,11 +47,9 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		    
 		PersistenceManager pm = getPersistenceManager();
 		pm.currentTransaction().begin();
-		MemberSmall ms = new MemberSmall(firstname + " " + lastname);
-		Member m = new Member(firstname,lastname,email);
-		ms.setFullMember(m);
+		Member m = new Member(firstname,lastname,email,role);
 		try {
-			pm.makePersistent(ms);
+			pm.makePersistent(m);
 //			pm.makePersistent(ms);
 			pm.currentTransaction().commit();
 		}
@@ -91,7 +89,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		pm.currentTransaction().begin();
 		try {
 			for(Long id : ids){
-				Query q = pm.newQuery(MemberSmall.class, "id == " + id);
+				Query q = pm.newQuery(Member.class, "id == " + id);
 				q.deletePersistentAll();
 			}
 			pm.currentTransaction().commit();
@@ -101,21 +99,22 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		finally{
 			pm.close();
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
-	public ArrayList<MemberSmall> getMembersSmall() {
-		ArrayList<MemberSmall> list = new ArrayList<>();
+	public ArrayList<Member> getMembers() {
+		ArrayList<Member> list = new ArrayList<>();
 		PersistenceManager pm = getPersistenceManager();
-		Extent<MemberSmall> e = pm.getExtent(MemberSmall.class);
+		Extent<Member> e = pm.getExtent(Member.class);
 		try {
-			Iterator<MemberSmall> iter = e.iterator();
+			Iterator<Member> iter = e.iterator();
 			while(iter.hasNext()){
-				list.add((MemberSmall) iter.next());
+				list.add((Member) iter.next());
 			}
 		}
 		finally {
+			e.closeAll();
 			pm.close();
 		}
 		return list;
@@ -138,5 +137,21 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	
 	private PersistenceManager getPersistenceManager() {
 		return PMF.getPersistenceManager();
+	}
+
+	@Override
+	public Member getMember(Long id) {
+		List<Member> mlist;
+		PersistenceManager pm = getPersistenceManager();
+//		pm.currentTransaction().begin();
+		try{
+			Query q = pm.newQuery(Member.class,"id == " + id);
+			mlist = (List<Member>) q.execute();
+//			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+		return mlist.get(0);
 	}
 }

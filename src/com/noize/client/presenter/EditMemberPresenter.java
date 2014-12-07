@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.MemberUpdatedEvent;
@@ -19,7 +20,7 @@ public class EditMemberPresenter implements Presenter {
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
 	private final Display display;
-//	private Member member;
+	private Member member;
 	
 	public interface Display {
 		HasClickHandlers getSaveButton();
@@ -27,6 +28,7 @@ public class EditMemberPresenter implements Presenter {
 		HasValue<String> getFirstName();
 		HasValue<String> getLastName();
 		HasValue<String> getEmail();
+		ListBox getRolePicker();
 		Widget asWidget();
 	}
 	
@@ -36,6 +38,30 @@ public class EditMemberPresenter implements Presenter {
 		this.display = view;
 //		this.member = new Member();
 		bind();
+	}
+	
+	public EditMemberPresenter(DatabaseServiceAsync rpcService,HandlerManager eventbus,Display view,Long id) {
+		this.rpcService = rpcService;
+		this.eventbus = eventbus;
+		this.display = view;
+		bind();
+		rpcService.getMember(id, new AsyncCallback<Member>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Daten konnten nicht geladen werden");
+				
+			}
+
+			@Override
+			public void onSuccess(Member result) {
+				member = result;
+				EditMemberPresenter.this.display.getFirstName().setValue(member.getFirstName());
+				EditMemberPresenter.this.display.getLastName().setValue(member.getLastName());
+				EditMemberPresenter.this.display.getEmail().setValue(member.getEmail());
+				EditMemberPresenter.this.display.getRolePicker().setSelectedIndex(1); //FIXME
+			}
+		});
 	}
 
 	private void bind() {
@@ -62,7 +88,7 @@ public class EditMemberPresenter implements Presenter {
 
 	private void doSave() {
 //		member = new Member(display.getFirstName().getValue(), display.getLastName().getValue());
-		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(),display.getEmail().getValue(), new AsyncCallback<Member>() {
+		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(),display.getEmail().getValue(),display.getRolePicker().getValue(display.getRolePicker().getSelectedIndex()), new AsyncCallback<Member>() {
 			
 			
 			@Override

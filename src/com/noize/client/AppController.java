@@ -9,6 +9,8 @@ import com.noize.client.events.AddMemberEvent;
 import com.noize.client.events.AddMemberEventHandler;
 import com.noize.client.events.DeleteMemberEvent;
 import com.noize.client.events.DeleteMemberEventHandler;
+import com.noize.client.events.EditMemberEvent;
+import com.noize.client.events.EditMemberEventHandler;
 import com.noize.client.events.MemberUpdatedEvent;
 import com.noize.client.events.MemberUpdatedEventHandler;
 import com.noize.client.presenter.EditMemberPresenter;
@@ -32,6 +34,17 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 		bind();
 	}
 	
+//	class RowHandler implements ClickHandler{
+//
+//		@Override
+//		public void onClick(ClickEvent event) {
+//			History.newItem("edit", false);
+//			MembersTableRow row = (MembersTableRow) event.getSource();
+//			row.getElement().
+//			Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),);
+//		}
+//		
+//	}
 
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
@@ -47,14 +60,10 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			else if(token.equals("edit")){
 				presenter = new EditMemberPresenter(rpcService,eventbus,new EditMemberView());
 			}
-			
-			
 			if(presenter != null){
 				presenter.go(container);
 			}
-				
 		}
-		
 	}
 	
 	public void go(final HasWidgets container) {
@@ -90,6 +99,19 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 				
 			}
 		});
+		eventbus.addHandler(EditMemberEvent.TYPE, new EditMemberEventHandler() {
+			
+			@Override
+			public void onEditMember(Long id) {
+				doEditMember(id);
+			}
+		});
+	}
+
+	private void doEditMember(Long id) {
+		History.newItem("edit", false);
+		Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),id);
+		presenter.go(container);
 	}
 
 	private void doMemberUpdated() {

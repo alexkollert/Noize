@@ -1,7 +1,10 @@
 package com.noize.shared;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -11,15 +14,18 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * about a Member. 
  *
  */
-@PersistenceCapable
+@PersistenceCapable(identityType=IdentityType.APPLICATION)
 public class Member implements IsSerializable{
 	
-//	@PrimaryKey
-//	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
-//	private Long id;
+	@PrimaryKey
+	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
+	private Long id;
 	
 //	@Persistent
 //	private MemberSmall smallmember;
+	
+	@Persistent
+	private String role;
 
 	@Persistent
 	private String firstName;
@@ -35,10 +41,11 @@ public class Member implements IsSerializable{
 		
 	}
 	
-	public Member(String firstname, String lastname, String email){
+	public Member(String firstname, String lastname, String email,String role){
 		this.firstName = firstname;
 		this.lastName = lastname;
 		this.email = email;
+		this.role = role;
 	}
 	
 	public String getFirstName(){
@@ -49,9 +56,9 @@ public class Member implements IsSerializable{
 		return this.lastName;
 	}
 	
-//	public Long getId(){
-//		return this.id;
-//	}
+	public Long getId(){
+		return this.id;
+	}
 	
 	public void setFirstName(String str){
 		this.firstName = str;

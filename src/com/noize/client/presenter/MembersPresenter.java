@@ -15,11 +15,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.AddMemberEvent;
 import com.noize.client.events.DeleteMemberEvent;
-import com.noize.shared.MemberSmall;
+import com.noize.client.events.EditMemberEvent;
+import com.noize.shared.Member;
 
 public class MembersPresenter implements Presenter{
 	
-	private List<MemberSmall> members;
+	public List<Member> members;
 	
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
@@ -28,13 +29,33 @@ public class MembersPresenter implements Presenter{
 	public interface Display {
 		HasClickHandlers getDeleteButton();
 		HasClickHandlers getAddButton();
+		HasClickHandlers getEditButton();
 		void setData(List<String> data);
 		List<Integer> getSelectedRows();
 		Widget asWidget();
 	}
 	
-	public MembersPresenter(DatabaseServiceAsync rpcService, HandlerManager eventbus, Display view) {
-		this.rpcService = rpcService;
+//	public static class TableHandler implements ClickHandler,MouseOverHandler{
+//
+//		@Override
+//		public void onClick(ClickEvent event) {
+//			FlexTable table = (FlexTable) event.getSource();
+//			Cell cell = table.getCellForEvent(event);
+//			int index = cell.getRowIndex();
+//			MemberSmall ms = members.get(index);
+//			History.newItem("edit",false);
+//			Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),ms.getId());
+//		}
+//
+//		@Override
+//		public void onMouseOver(MouseOverEvent event) {
+//			
+//		}
+//		
+//	}
+	
+	public MembersPresenter(DatabaseServiceAsync rpc, HandlerManager eventbus, Display view) {
+		this.rpcService = rpc;
 		this.eventbus = eventbus;
 		this.display = view;
 	}
@@ -45,25 +66,39 @@ public class MembersPresenter implements Presenter{
 			@Override
 			public void onClick(ClickEvent event) {
 				eventbus.fireEvent(new AddMemberEvent());
-				
 			}
 		});
 		display.getDeleteButton().addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				boolean ok = false;
-				ok = Window.confirm("Löschen bestätigen");
-				if(ok)
-					deleteSelectedMembers();
+				deleteSelectedMembers();
 			}
 		});
-		
+		display.getEditButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				List<Integer> selRows = display.getSelectedRows();
+				if(selRows.size() == 0){
+					return;
+				}
+				Integer row = selRows.get(0);
+				Long id = members.get(row).getId();
+				eventbus.fireEvent(new EditMemberEvent(id));
+			}
+		});
 	}
 
 	private void deleteSelectedMembers() {
-		ArrayList<Long> ids = new ArrayList<Long>();
+		boolean ok = false;
 		List<Integer> selectedRows = display.getSelectedRows();
+		if(selectedRows.size() == 0)
+			return;
+		ok = Window.confirm("Löschen bestätigen");
+		if(!ok)
+			return;
+		ArrayList<Long> ids = new ArrayList<Long>();
 		for(int i = 0; i < selectedRows.size();i++){
 			ids.add(members.get(selectedRows.get(i)).getId());
 		}
@@ -72,13 +107,11 @@ public class MembersPresenter implements Presenter{
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Löschen fehlgeschlagen");
-				
 			}
 
 			@Override
 			public void onSuccess(Boolean result) {
 				eventbus.fireEvent(new DeleteMemberEvent());
-				
 			}
 		});
 	}
@@ -93,15 +126,15 @@ public class MembersPresenter implements Presenter{
 
 	private void fetchMembers() {
 		GWT.log("run fetchMembers() in MembersPresenter");
-		rpcService.getMembersSmall(new AsyncCallback<ArrayList<MemberSmall>>() {
+		rpcService.getMembers(new AsyncCallback<ArrayList<Member>>() {
 			
 			@Override
-			public void onSuccess(ArrayList<MemberSmall> result) {
+			public void onSuccess(ArrayList<Member> result) {
 //				GWT.log("getMembers() returned: " + );
 				members = result;
 				ArrayList<String> data = new ArrayList<String>();
 				for(int i = 0;i < members.size();i++){
-					data.add(members.get(i).getDisplayName());
+					data.add(members.get(i).getFirstName() + " " + members.get(i).getLastName());
 				}
 				display.setData(data);
 			}
