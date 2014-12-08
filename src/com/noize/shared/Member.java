@@ -64,6 +64,18 @@ public class Member implements IsSerializable{
 		this.firstName = str;
 	}
 	
+	public void setLastName(String str){
+		this.lastName = str;
+	}
+	
+	public void setEmail(String str){
+		this.email = str;
+	}
+	
+	public void setRole(String str){
+		this.role = str;
+	}
+	
 	public String getEmail(){
 		return this.email;
 	}

@@ -36,7 +36,7 @@ public class EditMemberPresenter implements Presenter {
 		this.rpcService = rpcService;
 		this.eventbus = eventbus;
 		this.display = view;
-//		this.member = new Member();
+		this.member = new Member();
 		bind();
 	}
 	
@@ -50,7 +50,6 @@ public class EditMemberPresenter implements Presenter {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Daten konnten nicht geladen werden");
-				
 			}
 
 			@Override
@@ -87,18 +86,20 @@ public class EditMemberPresenter implements Presenter {
 	}
 
 	private void doSave() {
-//		member = new Member(display.getFirstName().getValue(), display.getLastName().getValue());
-		rpcService.addMember(display.getFirstName().getValue(), display.getLastName().getValue(),display.getEmail().getValue(),display.getRolePicker().getValue(display.getRolePicker().getSelectedIndex()), new AsyncCallback<Member>() {
-			
+		member.setFirstName(display.getFirstName().getValue());
+		member.setLastName(display.getLastName().getValue());
+		member.setEmail(display.getEmail().getValue());
+		member.setRole(display.getRolePicker().getValue(display.getRolePicker().getSelectedIndex()));
+		
+		rpcService.updateMember(member, new AsyncCallback<Boolean>() {
 			
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Fehler beim Bearbeiten!");
 			}
 
-
 			@Override
-			public void onSuccess(Member result) {
+			public void onSuccess(Boolean result) {
 				eventbus.fireEvent(new MemberUpdatedEvent());
 			}
 		});

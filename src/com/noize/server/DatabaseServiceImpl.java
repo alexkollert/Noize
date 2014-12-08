@@ -73,11 +73,23 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean updateMember(Member m) {
 		PersistenceManager pm = getPersistenceManager();
+//		pm.currentTransaction().begin();
+//		pm.currentTransaction().setOptimistic(true);
 		try {
-//			Member res = (Member) pm.getObjectById(m);
-			pm.deletePersistent(m);
+			Long id = m.getId();
+			if(id != null){
+				pm.currentTransaction().begin();
+				Query q = pm.newQuery(Member.class, "id == " + id);
+				q.deletePersistentAll();
+				pm.currentTransaction().commit();
+			}
+			pm.currentTransaction().begin();
 			pm.makePersistent(m);
-		} finally{
+			pm.currentTransaction().commit();
+		}catch(Exception e){
+			pm.currentTransaction().rollback();
+		}
+		finally{
 			pm.close();
 		}
 		return true;
