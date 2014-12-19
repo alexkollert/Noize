@@ -5,19 +5,28 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.noize.client.events.AddMemberEvent;
 import com.noize.client.events.AddMemberEventHandler;
+import com.noize.client.events.AppBusyEvent;
+import com.noize.client.events.AppBusyEventHandler;
+import com.noize.client.events.AppFreeEvent;
+import com.noize.client.events.AppFreeEventHandler;
 import com.noize.client.events.DeleteMemberEvent;
 import com.noize.client.events.DeleteMemberEventHandler;
 import com.noize.client.events.EditMemberEvent;
 import com.noize.client.events.EditMemberEventHandler;
 import com.noize.client.events.MemberUpdatedEvent;
 import com.noize.client.events.MemberUpdatedEventHandler;
+import com.noize.client.presenter.AttendancePresenter;
 import com.noize.client.presenter.EditMemberPresenter;
 import com.noize.client.presenter.MembersPresenter;
 import com.noize.client.presenter.Presenter;
+import com.noize.client.view.AttendanceView;
+import com.noize.client.view.BusyIndicatorView;
 import com.noize.client.view.EditMemberView;
 import com.noize.client.view.MembersView;
+import com.noize.client.view.NavBarView;
 
 /**
  * This Controller manages History and Events
@@ -26,7 +35,8 @@ import com.noize.client.view.MembersView;
 public class AppController implements Presenter,ValueChangeHandler<String> {
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
-	private HasWidgets container;
+	private HasWidgets mainContainer;
+	private HasWidgets navContainer;
 	
 	public AppController(DatabaseServiceAsync rpcService,HandlerManager eventbus) {
 		this.rpcService = rpcService;
@@ -34,18 +44,6 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 		bind();
 	}
 	
-//	class RowHandler implements ClickHandler{
-//
-//		@Override
-//		public void onClick(ClickEvent event) {
-//			History.newItem("edit", false);
-//			MembersTableRow row = (MembersTableRow) event.getSource();
-//			row.getElement().
-//			Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),);
-//		}
-//		
-//	}
-
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
@@ -60,14 +58,20 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			else if(token.equals("edit")){
 				presenter = new EditMemberPresenter(rpcService,eventbus,new EditMemberView());
 			}
+			else if (token.equals("presence")) {
+				presenter = new AttendancePresenter(rpcService, eventbus, new AttendanceView());
+			}
 			if(presenter != null){
-				presenter.go(container);
+				presenter.go(mainContainer);
 			}
 		}
 	}
 	
-	public void go(final HasWidgets container) {
-		this.container = container;
+	public void go(final HasWidgets mainContainer) {
+		this.mainContainer = mainContainer;
+		this.navContainer = RootPanel.get("nav");
+		NavBarView navbar = new NavBarView();
+		navContainer.add(navbar);
 		if ("".equals(History.getToken()))
 			History.newItem("list");
 		else
@@ -106,12 +110,27 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 				doEditMember(id);
 			}
 		});
+		eventbus.addHandler(AppBusyEvent.TYPE, new AppBusyEventHandler() {
+			
+			@Override
+			public void onAppBusy() {
+				BusyIndicatorView.busy();
+			}
+		});
+		eventbus.addHandler(AppFreeEvent.TYPE, new AppFreeEventHandler() {
+			
+			@Override
+			public void onAppfree() {
+				BusyIndicatorView.free();
+				
+			}
+		});
 	}
 
 	private void doEditMember(Long id) {
 		History.newItem("edit", false);
 		Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),id);
-		presenter.go(container);
+		presenter.go(mainContainer);
 	}
 
 	private void doMemberUpdated() {

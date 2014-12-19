@@ -1,5 +1,8 @@
 package com.noize.shared;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -8,10 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-
 /**
- * This Entity is child of MemberSmall and contains all Information
- * about a Member. 
  *
  */
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
@@ -20,9 +20,6 @@ public class Member implements IsSerializable{
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
 	private Long id;
-	
-//	@Persistent
-//	private MemberSmall smallmember;
 	
 	@Persistent
 	private String role;
@@ -36,6 +33,8 @@ public class Member implements IsSerializable{
 	@Persistent
 	private String email;
 	
+	@Persistent
+	private List<Training> trainingDay = new ArrayList<Training>();
 	
 	public Member() {
 		
@@ -78,6 +77,18 @@ public class Member implements IsSerializable{
 	
 	public String getEmail(){
 		return this.email;
+	}
+	
+	public void addDay(Training date){
+		trainingDay.add(date);
+	}
+	
+	public List<Training> getTrainingDay(){
+		return this.trainingDay;
+	}
+	
+	public void setTrainingDay(List<Training> list){
+		this.trainingDay = list;
 	}
 	
 //	public MemberSmall getMemberSmall(){

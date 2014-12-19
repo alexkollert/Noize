@@ -18,6 +18,6 @@ public class Noize implements EntryPoint {
 				.create(DatabaseService.class);
 		HandlerManager eventbus = new HandlerManager(null);
 		AppController appViewer = new AppController(databaseService, eventbus);
-		appViewer.go(RootPanel.get());
+		appViewer.go(RootPanel.get("main"));
 	}
 }

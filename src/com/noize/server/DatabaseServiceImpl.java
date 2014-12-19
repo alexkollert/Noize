@@ -1,6 +1,8 @@
 package com.noize.server;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import javax.jdo.Query;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.Member;
+import com.noize.shared.Training;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -74,7 +77,6 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	public boolean updateMember(Member m) {
 		PersistenceManager pm = getPersistenceManager();
 //		pm.currentTransaction().begin();
-//		pm.currentTransaction().setOptimistic(true);
 		try {
 			Long id = m.getId();
 			if(id != null){
@@ -115,8 +117,8 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public ArrayList<Member> getMembers() {
-		ArrayList<Member> list = new ArrayList<>();
+	public List<Member> getMembers() {
+		List<Member> list = new ArrayList<>();
 		PersistenceManager pm = getPersistenceManager();
 		Extent<Member> e = pm.getExtent(Member.class);
 		try {
@@ -166,4 +168,40 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		}
 		return mlist.get(0);
 	}
+
+	@Override
+	public boolean addTraining(Date d) {
+		SimpleDateFormat sdate = new SimpleDateFormat("dd-MM-yyyy"); 
+		String res = sdate.format(d);
+		Training t = new Training(res);
+		PersistenceManager pm = getPersistenceManager();
+		try{
+			pm.currentTransaction().begin();
+			pm.makePersistent(t);
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+		return true;
+	}
+
+	@Override
+	public List<Training> getTrainingAll() {
+		List<Training> list = new ArrayList<Training>();
+		PersistenceManager pm = getPersistenceManager();
+		Extent<Training> e = pm.getExtent(Training.class);
+		try {
+			Iterator<Training> iter = e.iterator();
+			while(iter.hasNext()){
+				list.add((Training) iter.next());
+			}
+		}
+		finally {
+			e.closeAll();
+			pm.close();
+		}
+		return list;
+	}
+	
 }

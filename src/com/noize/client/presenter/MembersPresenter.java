@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -34,25 +35,6 @@ public class MembersPresenter implements Presenter{
 		List<Integer> getSelectedRows();
 		Widget asWidget();
 	}
-	
-//	public static class TableHandler implements ClickHandler,MouseOverHandler{
-//
-//		@Override
-//		public void onClick(ClickEvent event) {
-//			FlexTable table = (FlexTable) event.getSource();
-//			Cell cell = table.getCellForEvent(event);
-//			int index = cell.getRowIndex();
-//			MemberSmall ms = members.get(index);
-//			History.newItem("edit",false);
-//			Presenter presenter = new EditMemberPresenter(rpcService, eventbus, new EditMemberView(),ms.getId());
-//		}
-//
-//		@Override
-//		public void onMouseOver(MouseOverEvent event) {
-//			
-//		}
-//		
-//	}
 	
 	public MembersPresenter(DatabaseServiceAsync rpc, HandlerManager eventbus, Display view) {
 		this.rpcService = rpc;
@@ -96,8 +78,10 @@ public class MembersPresenter implements Presenter{
 		if(selectedRows.size() == 0)
 			return;
 		ok = Window.confirm("Löschen bestätigen");
-		if(!ok)
+		if(!ok){
+			History.newItem("list");
 			return;
+		}
 		ArrayList<Long> ids = new ArrayList<Long>();
 		for(int i = 0; i < selectedRows.size();i++){
 			ids.add(members.get(selectedRows.get(i)).getId());
@@ -126,10 +110,10 @@ public class MembersPresenter implements Presenter{
 
 	private void fetchMembers() {
 		GWT.log("run fetchMembers() in MembersPresenter");
-		rpcService.getMembers(new AsyncCallback<ArrayList<Member>>() {
+		rpcService.getMembers(new AsyncCallback<List<Member>>() {
 			
 			@Override
-			public void onSuccess(ArrayList<Member> result) {
+			public void onSuccess(List<Member> result) {
 //				GWT.log("getMembers() returned: " + );
 				members = result;
 				ArrayList<String> data = new ArrayList<String>();
@@ -142,7 +126,6 @@ public class MembersPresenter implements Presenter{
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Server Error");
-				
 			}
 		});
 		

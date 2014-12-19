@@ -7,8 +7,8 @@ public class EditMemberEvent extends GwtEvent<EditMemberEventHandler>{
 	public static Type<EditMemberEventHandler> TYPE = new Type<EditMemberEventHandler>();
 	private Long id;
 
-	public EditMemberEvent(Long id) {
-		this.id = id;
+	public EditMemberEvent(Long id2) {
+		this.id = id2;
 	}
 
 	@Override
