@@ -24,7 +24,7 @@ import com.noize.shared.Training;
 public class AttendancePresenter implements Presenter{
 //	private List<Member> members;
 //	private List<Training> days;
-	private int rows = 0,cols = 0,count = 0;
+	private int rows = 0,cols = 0;
 	
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
@@ -95,11 +95,11 @@ public class AttendancePresenter implements Presenter{
 //				days = list;
 //				display.setDays(result);
 //				ready = true;
-				count++;
 				cols = result.size();
 				for(int i = 0;i < result.size();i++){
 					display.getTable().setWidget(0, i+1, new Label(result.get(i).getDate()));
 				}
+				fetchMembers();
 			}
 			
 			@Override
@@ -107,6 +107,10 @@ public class AttendancePresenter implements Presenter{
 				Window.alert("Fehler");
 			}
 		});
+		eventbus.fireEvent(new AppFreeEvent());
+	}
+
+	private void fetchMembers() {
 		rpcService.getMembers(new AsyncCallback<List<Member>>() {
 			@Override
 			public void onSuccess(List<Member> result) {
@@ -116,12 +120,10 @@ public class AttendancePresenter implements Presenter{
 //				}
 //				members = result;
 //				display.setMembers(result);
-				count++;
 				rows = result.size();
 				for(int i = 0; i < result.size();i++){
 					display.getTable().setWidget(i+1, 0, new Label(result.get(i).getFirstName() + " "+ result.get(i).getLastName()));
 				}
-				while(count < 2){}
 				for(int i = 1;i <= rows;i++){
 					for(int j = 1;j <= cols;j++){
 						display.getTable().setWidget(i, j, new CheckBox());
@@ -134,12 +136,7 @@ public class AttendancePresenter implements Presenter{
 				Window.alert("Fehler");
 			}
 		});
-		eventbus.fireEvent(new AppFreeEvent());
-//		for(int i = 1;i <= rows;i++){
-//			for(int j = 1;j <= cols;j++){
-//				display.getTable().setWidget(i, j, new CheckBox());
-//			}
-//		}
+		
 	}
 
 }
