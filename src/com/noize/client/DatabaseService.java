@@ -28,4 +28,6 @@ public interface DatabaseService extends RemoteService {
 	
 	List<Training> getTrainingAll();
 	
+	void storeDayinMember(Member m,Training t);
+	
 }

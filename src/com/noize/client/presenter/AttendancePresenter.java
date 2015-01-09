@@ -3,10 +3,12 @@ package com.noize.client.presenter;
 import java.util.Date;
 import java.util.List;
 
+import com.google.appengine.api.search.query.ExpressionParser.condExpr_return;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -20,10 +22,11 @@ import com.noize.client.events.AppBusyEvent;
 import com.noize.client.events.AppFreeEvent;
 import com.noize.shared.Member;
 import com.noize.shared.Training;
+import com.sun.xml.internal.ws.api.server.Container;
 
 public class AttendancePresenter implements Presenter{
-//	private List<Member> members;
-//	private List<Training> days;
+	private List<Member> members;
+	private List<Training> days;
 	private int rows = 0,cols = 0;
 	
 	private final DatabaseServiceAsync rpcService;
@@ -87,7 +90,7 @@ public class AttendancePresenter implements Presenter{
 			
 			@Override
 			public void onSuccess(List<Training> result) {
-//				days = result;
+				days = result;
 //				ArrayList<String> list = new ArrayList<String>();
 //				for(int i = 0;i < result.size();i++){
 //					list.add(result.get(i).getDate());
@@ -118,7 +121,7 @@ public class AttendancePresenter implements Presenter{
 //				for(int i = 0;i < members.size();i++){
 //					data.add(result.get(i).getFirstName() + " " + result.get(i).getLastName());
 //				}
-//				members = result;
+				members = result;
 //				display.setMembers(result);
 				rows = result.size();
 				for(int i = 0; i < result.size();i++){
@@ -126,7 +129,17 @@ public class AttendancePresenter implements Presenter{
 				}
 				for(int i = 1;i <= rows;i++){
 					for(int j = 1;j <= cols;j++){
-						display.getTable().setWidget(i, j, new CheckBox());
+						CheckBox checkbox = new CheckBox();
+						checkbox.addClickHandler(new ClickHandler() {
+							
+							@Override
+							public void onClick(ClickEvent event) {
+								setDayinMember(event);
+							}
+
+						});
+						checkbox.setName(String.valueOf(i)+"-"+String.valueOf(j));
+						display.getTable().setWidget(i, j, checkbox);
 					}
 				}
 			}
@@ -137,6 +150,30 @@ public class AttendancePresenter implements Presenter{
 			}
 		});
 		
+	}
+	
+	private void setDayinMember(ClickEvent event){
+		int rowIndex = 0,colIndex = 0;
+		CheckBox c = (CheckBox) event.getSource();
+		String[] tmp = c.getName().split("-");
+		rowIndex = Integer.valueOf(tmp[0]);
+		colIndex = Integer.valueOf(tmp[1]);
+		Member m = members.get(rowIndex-1);
+		Training t = days.get(colIndex - 1);
+		if(c.getValue()){
+			rpcService.storeDayinMember(m, t, new AsyncCallback<Void>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("storeDayinMember Fehler");
+				}
+
+				@Override
+				public void onSuccess(Void result) {
+					Window.alert("storeDayinMember Erfolg");
+				}
+			});
+		}
 	}
 
 }

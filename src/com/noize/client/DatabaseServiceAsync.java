@@ -20,4 +20,5 @@ public interface DatabaseServiceAsync {
 	void getMember(Long id, AsyncCallback<Member> callback);
 	void addTraining(Date t, AsyncCallback<Boolean> callback);
 	void getTrainingAll(AsyncCallback<List<Training>> callback);
+	void storeDayinMember(Member m, Training t, AsyncCallback<Void> callback);
 }
