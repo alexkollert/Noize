@@ -37,5 +37,9 @@ public class Training implements IsSerializable{
 		return this.date;
 	}
 	
+	public String getID(){
+		return this.id;
+	}
+	
 	
 }

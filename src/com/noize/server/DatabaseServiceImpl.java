@@ -205,11 +205,22 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void storeDayinMember(Member m, Training t) {
+	public void storeDayinMember(Member m, String tid) {
+		List<Training> tlist;
 		PersistenceManager pm = getPersistenceManager();
 		pm.currentTransaction().begin();
 		try{
-			m.addDay(t);
+			Query q = pm.newQuery(Training.class, "id == " + tid);
+			tlist = (List<Training>) q.execute();
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+		pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			m.addDay(tlist.get(0));
 			pm.makePersistent(m);
 			pm.currentTransaction().commit();
 		}

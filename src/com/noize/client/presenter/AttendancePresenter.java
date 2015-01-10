@@ -159,9 +159,10 @@ public class AttendancePresenter implements Presenter{
 		rowIndex = Integer.valueOf(tmp[0]);
 		colIndex = Integer.valueOf(tmp[1]);
 		Member m = members.get(rowIndex-1);
-		Training t = days.get(colIndex - 1);
+//		Training t = days.get(colIndex - 1); //how to store the same Training from datastore into Member, this creates a new Training Record
+		String tid = days.get(colIndex - 1).getID();
 		if(c.getValue()){
-			rpcService.storeDayinMember(m, t, new AsyncCallback<Void>() {
+			rpcService.storeDayinMember(m, tid, new AsyncCallback<Void>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

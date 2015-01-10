@@ -16,6 +16,6 @@
        <property name="datanucleus.appengine.autoCreateDatastoreTxns" value="true"/>
        <property name="datanucleus.appengine.singletonPMFForName" value="true"/>
        <property name="datanucleus.appengine.datastoreEnableXGTransactions" value="true"/>
-       <property name="datanucleus.appengine.datastoreReadConsistency" value="EVENTUAL" />
+       <!-- <property name="datanucleus.appengine.datastoreReadConsistency" value="EVENTUAL" /> -->
    </persistence-manager-factory>
 </jdoconfig>
