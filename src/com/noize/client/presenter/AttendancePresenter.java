@@ -104,7 +104,6 @@ public class AttendancePresenter implements Presenter{
 					display.getTable().setWidget(0, i+1, new Label(result.get(i).getDate()));
 				}
 				fetchMemberToTraining();
-				fetchMembers();
 			}
 			
 			@Override
@@ -121,13 +120,12 @@ public class AttendancePresenter implements Presenter{
 			@Override
 			public void onSuccess(List<MemberToTraining> result) {
 				mtt = result;
-				
+				fetchMembers();
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -164,7 +162,8 @@ public class AttendancePresenter implements Presenter{
 						for(int k = 0;k < mtt.size();k++){
 							if(mtt.get(k).getTid().compareTo(t.getID()) == 0){
 								if(mtt.get(k).getMid().compareTo(m.getId()) == 0){
-									Window.alert(m.getId().toString());
+									checkbox.setValue(true);
+//									Window.alert(m.getId().toString());
 								}
 							}
 						}
@@ -199,7 +198,6 @@ public class AttendancePresenter implements Presenter{
 				@Override
 				public void onSuccess(Void result) {
 					// TODO Auto-generated method stub
-					
 				}
 				
 				@Override
