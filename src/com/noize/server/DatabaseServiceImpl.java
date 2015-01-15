@@ -14,6 +14,7 @@ import javax.jdo.Query;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.Member;
+import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -205,29 +206,70 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void storeDayinMember(Member m, String tid) {
-		List<Training> tlist;
+	public void storeDayinMember(Member m) {
 		PersistenceManager pm = getPersistenceManager();
-		pm.currentTransaction().begin();
 		try{
-			Query q = pm.newQuery(Training.class, "id == " + tid);
-			tlist = (List<Training>) q.execute();
-			pm.currentTransaction().commit();
-		}
-		finally{
-			pm.close();
-		}
-		pm = getPersistenceManager();
-		pm.currentTransaction().begin();
-		try{
-			m.addDay(tlist.get(0));
+//			pm.currentTransaction().begin();
+//			Long id = m.getId();
+//			Query q = pm.newQuery(Member.class, "id == " + id);
+////			mlist = (List<Member>) q.execute();
+////			q.deletePersistentAll();
+//			pm.currentTransaction().commit();
+			pm.currentTransaction().begin();
 			pm.makePersistent(m);
 			pm.currentTransaction().commit();
 		}
 		finally{
 			pm.close();
 		}
+	}
+
+	@Override
+	public Training getTraining(String id) {
+		List<Training> tlist;
+		PersistenceManager pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query q = pm.newQuery(Training.class, "id == " + id);
+			tlist = (List<Training>) q.execute();
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+		return tlist.get(0);
+	}
+
+	@Override
+	public void addMemberToTraining(MemberToTraining mtt) {
+		PersistenceManager pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			pm.makePersistent(mtt);
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
 		
+	}
+
+	@Override
+	public List<MemberToTraining> getMemberToTrainingAll() {
+		List<MemberToTraining> list = new ArrayList<MemberToTraining>();
+		PersistenceManager pm = getPersistenceManager();
+		Extent<MemberToTraining> e = pm.getExtent(MemberToTraining.class);
+		try {
+			Iterator<MemberToTraining> iter = e.iterator();
+			while(iter.hasNext()){
+				list.add((MemberToTraining) iter.next());
+			}
+		}
+		finally {
+			e.closeAll();
+			pm.close();
+		}
+		return list;
 	}
 	
 }

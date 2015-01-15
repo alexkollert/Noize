@@ -1,6 +1,7 @@
 package com.noize.shared;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -33,8 +34,8 @@ public class Member implements IsSerializable{
 	@Persistent
 	private String email;
 	
-	@Persistent
-	private List<Training> trainingDay = new ArrayList<Training>();
+//	@Persistent
+//	private List<Training> trainingDay = new ArrayList<Training>();
 	
 	public Member() {
 		
@@ -79,17 +80,25 @@ public class Member implements IsSerializable{
 		return this.email;
 	}
 	
-	public void addDay(Training date){
-		trainingDay.add(date);
-	}
+//	public void addDay(Training date){
+//		trainingDay.add(date);
+//	}
+//	
+//	public List<Training> getTrainingDay(){
+//		return this.trainingDay;
+//	}
+//	
+//	public void setTrainingDay(List<Training> list){
+//		this.trainingDay = list;
+//	}
 	
-	public List<Training> getTrainingDay(){
-		return this.trainingDay;
-	}
-	
-	public void setTrainingDay(List<Training> list){
-		this.trainingDay = list;
-	}
+//	public boolean contains(Training t){
+//		for(Training tmp : trainingDay){
+//			if(tmp.getID().equals(t.getID()))
+//				return true;
+//		}
+//		return false;
+//	}
 	
 //	public MemberSmall getMemberSmall(){
 //		return this.smallmember;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.noize.shared.Member;
+import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
 
 /**
@@ -20,5 +21,8 @@ public interface DatabaseServiceAsync {
 	void getMember(Long id, AsyncCallback<Member> callback);
 	void addTraining(Date t, AsyncCallback<Boolean> callback);
 	void getTrainingAll(AsyncCallback<List<Training>> callback);
-	void storeDayinMember(Member m, String t, AsyncCallback<Void> callback);
+	void storeDayinMember(Member m, AsyncCallback<Void> callback);
+	void getTraining(String id, AsyncCallback<Training> callback);
+	void addMemberToTraining(MemberToTraining mtt, AsyncCallback<Void> callback);
+	void getMemberToTrainingAll(AsyncCallback<List<MemberToTraining>> callback);
 }

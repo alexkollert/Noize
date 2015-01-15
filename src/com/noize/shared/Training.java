@@ -15,8 +15,8 @@ public class Training implements IsSerializable{
 	
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
-	@Extension(vendorName="datanucleus",key="gae.encoded-pk",value="true")
-	private String id;
+//	@Extension(vendorName="datanucleus",key="gae.encoded-pk",value="true")
+	private Long id;
 
 	@Persistent
 	private String date;
@@ -37,7 +37,7 @@ public class Training implements IsSerializable{
 		return this.date;
 	}
 	
-	public String getID(){
+	public Long getID(){
 		return this.id;
 	}
 	

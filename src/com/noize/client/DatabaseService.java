@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.noize.shared.Member;
+import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
 
 /**
@@ -28,6 +29,11 @@ public interface DatabaseService extends RemoteService {
 	
 	List<Training> getTrainingAll();
 	
-	void storeDayinMember(Member m,String t);
+	void storeDayinMember(Member m);
 	
+	Training getTraining(String id);
+	
+	void addMemberToTraining(MemberToTraining mtt);
+	
+	List<MemberToTraining> getMemberToTrainingAll();
 }

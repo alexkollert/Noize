@@ -3,12 +3,10 @@ package com.noize.client.presenter;
 import java.util.Date;
 import java.util.List;
 
-import com.google.appengine.api.search.query.ExpressionParser.condExpr_return;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -21,13 +19,16 @@ import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.AppBusyEvent;
 import com.noize.client.events.AppFreeEvent;
 import com.noize.shared.Member;
+import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
-import com.sun.xml.internal.ws.api.server.Container;
 
 public class AttendancePresenter implements Presenter{
 	private List<Member> members;
 	private List<Training> days;
+	private List<MemberToTraining> mtt;
 	private int rows = 0,cols = 0;
+	
+	static Member currentMember;
 	
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
@@ -102,6 +103,7 @@ public class AttendancePresenter implements Presenter{
 				for(int i = 0;i < result.size();i++){
 					display.getTable().setWidget(0, i+1, new Label(result.get(i).getDate()));
 				}
+				fetchMemberToTraining();
 				fetchMembers();
 			}
 			
@@ -111,6 +113,24 @@ public class AttendancePresenter implements Presenter{
 			}
 		});
 		eventbus.fireEvent(new AppFreeEvent());
+	}
+
+	private void fetchMemberToTraining() {
+		rpcService.getMemberToTrainingAll(new AsyncCallback<List<MemberToTraining>>() {
+			
+			@Override
+			public void onSuccess(List<MemberToTraining> result) {
+				mtt = result;
+				
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 	}
 
 	private void fetchMembers() {
@@ -139,6 +159,15 @@ public class AttendancePresenter implements Presenter{
 
 						});
 						checkbox.setName(String.valueOf(i)+"-"+String.valueOf(j));
+						Member m = members.get(i - 1);
+						Training t = days.get(j - 1);
+						for(int k = 0;k < mtt.size();k++){
+							if(mtt.get(k).getTid().compareTo(t.getID()) == 0){
+								if(mtt.get(k).getMid().compareTo(m.getId()) == 0){
+									Window.alert(m.getId().toString());
+								}
+							}
+						}
 						display.getTable().setWidget(i, j, checkbox);
 					}
 				}
@@ -158,20 +187,25 @@ public class AttendancePresenter implements Presenter{
 		String[] tmp = c.getName().split("-");
 		rowIndex = Integer.valueOf(tmp[0]);
 		colIndex = Integer.valueOf(tmp[1]);
-		Member m = members.get(rowIndex-1);
+		Long mid = members.get(rowIndex-1).getId();
 //		Training t = days.get(colIndex - 1); //how to store the same Training from datastore into Member, this creates a new Training Record
-		String tid = days.get(colIndex - 1).getID();
+		Long tid = days.get(colIndex - 1).getID();
+//		m.addDay(t);
+//		currentMember.addDay(t);
 		if(c.getValue()){
-			rpcService.storeDayinMember(m, tid, new AsyncCallback<Void>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("storeDayinMember Fehler");
-				}
-
+			MemberToTraining mtt = new MemberToTraining(mid,tid);
+			rpcService.addMemberToTraining(mtt, new AsyncCallback<Void>() {
+				
 				@Override
 				public void onSuccess(Void result) {
-					Window.alert("storeDayinMember Erfolg");
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 		}
