@@ -271,5 +271,19 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		}
 		return list;
 	}
+
+	@Override
+	public void deleteMemberToTraining(Long id) {
+		PersistenceManager pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query q = pm.newQuery(MemberToTraining.class, "id == " + id);
+			q.deletePersistentAll();
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+	}
 	
 }

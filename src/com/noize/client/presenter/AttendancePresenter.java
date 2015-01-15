@@ -135,12 +135,7 @@ public class AttendancePresenter implements Presenter{
 		rpcService.getMembers(new AsyncCallback<List<Member>>() {
 			@Override
 			public void onSuccess(List<Member> result) {
-//				ArrayList<String> data = new ArrayList<String>();
-//				for(int i = 0;i < members.size();i++){
-//					data.add(result.get(i).getFirstName() + " " + result.get(i).getLastName());
-//				}
 				members = result;
-//				display.setMembers(result);
 				rows = result.size();
 				for(int i = 0; i < result.size();i++){
 					display.getTable().setWidget(i+1, 0, new Label(result.get(i).getFirstName() + " "+ result.get(i).getLastName()));
@@ -163,7 +158,6 @@ public class AttendancePresenter implements Presenter{
 							if(mtt.get(k).getTid().compareTo(t.getID()) == 0){
 								if(mtt.get(k).getMid().compareTo(m.getId()) == 0){
 									checkbox.setValue(true);
-//									Window.alert(m.getId().toString());
 								}
 							}
 						}
@@ -187,10 +181,7 @@ public class AttendancePresenter implements Presenter{
 		rowIndex = Integer.valueOf(tmp[0]);
 		colIndex = Integer.valueOf(tmp[1]);
 		Long mid = members.get(rowIndex-1).getId();
-//		Training t = days.get(colIndex - 1); //how to store the same Training from datastore into Member, this creates a new Training Record
 		Long tid = days.get(colIndex - 1).getID();
-//		m.addDay(t);
-//		currentMember.addDay(t);
 		if(c.getValue()){
 			MemberToTraining mtt = new MemberToTraining(mid,tid);
 			rpcService.addMemberToTraining(mtt, new AsyncCallback<Void>() {
@@ -202,11 +193,30 @@ public class AttendancePresenter implements Presenter{
 				
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
+					Window.alert("Fehler beim Speichern");
 					
 				}
 			});
 		}
+		else{
+			for(int k = 0;k < mtt.size();k++){
+				if(mtt.get(k).getTid().compareTo(tid) == 0){
+					if(mtt.get(k).getMid().compareTo(mid) == 0){
+						rpcService.deleteMemberToTraining(mtt.get(k).getId(), new AsyncCallback<Void>() {
+							
+							@Override
+							public void onSuccess(Void result) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Fehler beim Löschen");
+							}
+						});
+					}
+				}
+			}
+		}
 	}
-
 }

@@ -36,4 +36,6 @@ public interface DatabaseService extends RemoteService {
 	void addMemberToTraining(MemberToTraining mtt);
 	
 	List<MemberToTraining> getMemberToTrainingAll();
+	
+	void deleteMemberToTraining(Long id);
 }

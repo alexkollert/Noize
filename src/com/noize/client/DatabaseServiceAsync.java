@@ -25,4 +25,5 @@ public interface DatabaseServiceAsync {
 	void getTraining(String id, AsyncCallback<Training> callback);
 	void addMemberToTraining(MemberToTraining mtt, AsyncCallback<Void> callback);
 	void getMemberToTrainingAll(AsyncCallback<List<MemberToTraining>> callback);
+	void deleteMemberToTraining(Long id, AsyncCallback<Void> callback);
 }
