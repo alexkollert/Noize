@@ -29,7 +29,7 @@ public interface DatabaseService extends RemoteService {
 	
 	List<Training> getTrainingAll();
 	
-	void storeDayinMember(Member m);
+//	void storeDayinMember(Member m);
 	
 	Training getTraining(String id);
 	
@@ -38,4 +38,6 @@ public interface DatabaseService extends RemoteService {
 	List<MemberToTraining> getMemberToTrainingAll();
 	
 	void deleteMemberToTraining(Long id);
+	
+	void deleteTraining(Long id);
 }

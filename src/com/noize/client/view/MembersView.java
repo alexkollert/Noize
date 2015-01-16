@@ -49,10 +49,6 @@ public class MembersView extends Composite implements Display{
 			return this;
 		}
 		
-//		public HasClickHandlers getEditButton(){
-//			return this.edit;
-//		}
-
 	}
 	
 	public MembersView() {

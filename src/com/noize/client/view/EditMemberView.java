@@ -17,10 +17,6 @@ import com.noize.client.presenter.EditMemberPresenter.Display;
 public class EditMemberView extends Composite implements Display{
 	
 	
-//	public enum ROLES {
-//		Interested,Member,ExMember,Blocked
-//	}
-	
 	private final TextBox firstName;
 	private final TextBox lastName;
 	private final TextBox email;

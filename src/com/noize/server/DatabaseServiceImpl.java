@@ -205,24 +205,24 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		return list;
 	}
 
-	@Override
-	public void storeDayinMember(Member m) {
-		PersistenceManager pm = getPersistenceManager();
-		try{
+//	@Override
+//	public void storeDayinMember(Member m) {
+//		PersistenceManager pm = getPersistenceManager();
+//		try{
+////			pm.currentTransaction().begin();
+////			Long id = m.getId();
+////			Query q = pm.newQuery(Member.class, "id == " + id);
+//////			mlist = (List<Member>) q.execute();
+//////			q.deletePersistentAll();
+////			pm.currentTransaction().commit();
 //			pm.currentTransaction().begin();
-//			Long id = m.getId();
-//			Query q = pm.newQuery(Member.class, "id == " + id);
-////			mlist = (List<Member>) q.execute();
-////			q.deletePersistentAll();
+//			pm.makePersistent(m);
 //			pm.currentTransaction().commit();
-			pm.currentTransaction().begin();
-			pm.makePersistent(m);
-			pm.currentTransaction().commit();
-		}
-		finally{
-			pm.close();
-		}
-	}
+//		}
+//		finally{
+//			pm.close();
+//		}
+//	}
 
 	@Override
 	public Training getTraining(String id) {
@@ -279,6 +279,24 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		try{
 			Query q = pm.newQuery(MemberToTraining.class, "id == " + id);
 			q.deletePersistentAll();
+			pm.currentTransaction().commit();
+		}
+		finally{
+			pm.close();
+		}
+	}
+
+	@Override
+	public void deleteTraining(Long id) {
+		PersistenceManager pm = getPersistenceManager();
+		pm.currentTransaction().begin();
+		try{
+			Query q = pm.newQuery(Training.class, "id == " + id);
+			q.deletePersistentAll();
+			pm.currentTransaction().commit();
+			pm.currentTransaction().begin();
+			Query v = pm.newQuery(MemberToTraining.class,"tid == " + id);
+			v.deletePersistentAll();
 			pm.currentTransaction().commit();
 		}
 		finally{

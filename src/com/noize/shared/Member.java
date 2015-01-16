@@ -1,8 +1,6 @@
 package com.noize.shared;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -34,8 +32,12 @@ public class Member implements IsSerializable{
 	@Persistent
 	private String email;
 	
-//	@Persistent
-//	private List<Training> trainingDay = new ArrayList<Training>();
+	@Persistent
+	private String adress;
+	
+	@Persistent
+	private Date birthdate;
+	
 	
 	public Member() {
 		

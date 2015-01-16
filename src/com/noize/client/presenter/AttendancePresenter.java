@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,28 +23,34 @@ import com.noize.shared.Member;
 import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
 
-public class AttendancePresenter implements Presenter{
+public class AttendancePresenter implements Presenter {
 	private List<Member> members;
 	private List<Training> days;
 	private List<MemberToTraining> mtt;
-	private int rows = 0,cols = 0;
-	
+	private int rows = 0, cols = 0;
+
 	static Member currentMember;
-	
+
 	private final DatabaseServiceAsync rpcService;
 	private final HandlerManager eventbus;
 	private final Display display;
-	
+
 	public interface Display {
 		HasClickHandlers getSaveButton();
+
 		DateBox getDateBox();
+
 		void setDays(List<Training> list);
+
 		void setMembers(List<Member> members);
+
 		FlexTable getTable();
+		
 		Widget asWidget();
 	}
-	
-	public AttendancePresenter(DatabaseServiceAsync rpcService,HandlerManager eventbus,Display view) {
+
+	public AttendancePresenter(DatabaseServiceAsync rpcService,
+			HandlerManager eventbus, Display view) {
 		this.rpcService = rpcService;
 		this.eventbus = eventbus;
 		this.display = view;
@@ -52,26 +59,50 @@ public class AttendancePresenter implements Presenter{
 
 	private void bind() {
 		display.getSaveButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				Date date = display.getDateBox().getValue();
-//				SimpleDateFormat d = new SimpleDateFormat("dd-MM-yyyy");
-//				String result = d.format(date);
-//				Date d = new SimpleDateFormat(pattern)
-//				Training training = new Training(date);
 				rpcService.addTraining(date, new AsyncCallback<Boolean>() {
-					
+
 					@Override
 					public void onSuccess(Boolean result) {
-//						History.fireCurrentHistoryState();
+						// History.fireCurrentHistoryState();
 					}
-					
+
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Termin konnte nicht erstellt werden");
 					}
 				});
+			}
+		});
+		display.getTable().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Cell src = display.getTable().getCellForEvent(event);
+				if(src.getRowIndex() == 0 && src.getCellIndex() > 0 && src.getCellIndex() <= days.size()){
+					boolean ok = Window.confirm("Datum löschen?");
+					if(ok){
+						rpcService.deleteTraining(days.get(src.getCellIndex() - 1).getID(), new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								// TODO Auto-generated method stub
+								
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
+					}
+						
+				}
+				
 			}
 		});
 	}
@@ -88,24 +119,25 @@ public class AttendancePresenter implements Presenter{
 		display.getTable().removeAllRows();
 		display.getTable().setWidget(0, 0, new Label("Name"));
 		rpcService.getTrainingAll(new AsyncCallback<List<Training>>() {
-			
+
 			@Override
 			public void onSuccess(List<Training> result) {
 				days = result;
-//				ArrayList<String> list = new ArrayList<String>();
-//				for(int i = 0;i < result.size();i++){
-//					list.add(result.get(i).getDate());
-//				}
-//				days = list;
-//				display.setDays(result);
-//				ready = true;
+				// ArrayList<String> list = new ArrayList<String>();
+				// for(int i = 0;i < result.size();i++){
+				// list.add(result.get(i).getDate());
+				// }
+				// days = list;
+				// display.setDays(result);
+				// ready = true;
 				cols = result.size();
-				for(int i = 0;i < result.size();i++){
-					display.getTable().setWidget(0, i+1, new Label(result.get(i).getDate()));
+				for (int i = 0; i < result.size(); i++) {
+					display.getTable().setWidget(0, i + 1,
+							new Label(result.get(i).getDate()));
 				}
 				fetchMemberToTraining();
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Fehler");
@@ -115,20 +147,21 @@ public class AttendancePresenter implements Presenter{
 	}
 
 	private void fetchMemberToTraining() {
-		rpcService.getMemberToTrainingAll(new AsyncCallback<List<MemberToTraining>>() {
-			
-			@Override
-			public void onSuccess(List<MemberToTraining> result) {
-				mtt = result;
-				fetchMembers();
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-			}
-		});
-		
+		rpcService
+				.getMemberToTrainingAll(new AsyncCallback<List<MemberToTraining>>() {
+
+					@Override
+					public void onSuccess(List<MemberToTraining> result) {
+						mtt = result;
+						fetchMembers();
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Fehler beim Laden der Relationen");
+					}
+				});
+
 	}
 
 	private void fetchMembers() {
@@ -137,26 +170,31 @@ public class AttendancePresenter implements Presenter{
 			public void onSuccess(List<Member> result) {
 				members = result;
 				rows = result.size();
-				for(int i = 0; i < result.size();i++){
-					display.getTable().setWidget(i+1, 0, new Label(result.get(i).getFirstName() + " "+ result.get(i).getLastName()));
+				for (int i = 0; i < result.size(); i++) {
+					display.getTable().setWidget(
+							i + 1,
+							0,
+							new Label(result.get(i).getFirstName() + " "
+									+ result.get(i).getLastName()));
 				}
-				for(int i = 1;i <= rows;i++){
-					for(int j = 1;j <= cols;j++){
+				for (int i = 1; i <= rows; i++) {
+					for (int j = 1; j <= cols; j++) {
 						CheckBox checkbox = new CheckBox();
 						checkbox.addClickHandler(new ClickHandler() {
-							
+
 							@Override
 							public void onClick(ClickEvent event) {
 								setDayinMember(event);
 							}
 
 						});
-						checkbox.setName(String.valueOf(i)+"-"+String.valueOf(j));
+						checkbox.setName(String.valueOf(i) + "-"
+								+ String.valueOf(j));
 						Member m = members.get(i - 1);
 						Training t = days.get(j - 1);
-						for(int k = 0;k < mtt.size();k++){
-							if(mtt.get(k).getTid().compareTo(t.getID()) == 0){
-								if(mtt.get(k).getMid().compareTo(m.getId()) == 0){
+						for (int k = 0; k < mtt.size(); k++) {
+							if (mtt.get(k).getTid().compareTo(t.getID()) == 0) {
+								if (mtt.get(k).getMid().compareTo(m.getId()) == 0) {
 									checkbox.setValue(true);
 								}
 							}
@@ -165,58 +203,78 @@ public class AttendancePresenter implements Presenter{
 					}
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Fehler");
 			}
 		});
-		
+
 	}
-	
-	private void setDayinMember(ClickEvent event){
-		int rowIndex = 0,colIndex = 0;
+
+	private void setDayinMember(ClickEvent event) {
+		int rowIndex = 0, colIndex = 0;
 		CheckBox c = (CheckBox) event.getSource();
 		String[] tmp = c.getName().split("-");
 		rowIndex = Integer.valueOf(tmp[0]);
 		colIndex = Integer.valueOf(tmp[1]);
-		Long mid = members.get(rowIndex-1).getId();
+		Long mid = members.get(rowIndex - 1).getId();
 		Long tid = days.get(colIndex - 1).getID();
-		if(c.getValue()){
-			MemberToTraining mtt = new MemberToTraining(mid,tid);
+		if (c.getValue()) {
+			MemberToTraining mtt = new MemberToTraining(mid, tid);
 			rpcService.addMemberToTraining(mtt, new AsyncCallback<Void>() {
-				
+
 				@Override
 				public void onSuccess(Void result) {
 					// TODO Auto-generated method stub
 				}
-				
+
 				@Override
 				public void onFailure(Throwable caught) {
 					Window.alert("Fehler beim Speichern");
-					
 				}
 			});
-		}
-		else{
-			for(int k = 0;k < mtt.size();k++){
-				if(mtt.get(k).getTid().compareTo(tid) == 0){
-					if(mtt.get(k).getMid().compareTo(mid) == 0){
-						rpcService.deleteMemberToTraining(mtt.get(k).getId(), new AsyncCallback<Void>() {
-							
-							@Override
-							public void onSuccess(Void result) {
-								// TODO Auto-generated method stub
-							}
-							
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert("Fehler beim Löschen");
-							}
-						});
+		} else {
+			for (int k = 0; k < mtt.size(); k++) {
+				if (mtt.get(k).getTid().compareTo(tid) == 0) {
+					if (mtt.get(k).getMid().compareTo(mid) == 0) {
+						rpcService.deleteMemberToTraining(mtt.get(k).getId(),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onSuccess(Void result) {
+										// TODO Auto-generated method stub
+									}
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Fehler beim Löschen");
+									}
+								});
 					}
 				}
 			}
 		}
 	}
+
+//	public class DateLabel extends Composite implements ClickHandler{
+//
+//		private Label date;
+//
+//		public DateLabel(String date) {
+//			this.date = new Label(date);
+//		}
+//
+//		@Override
+//		public Widget asWidget() {
+//			return this;
+//		}
+//
+//		@Override
+//		public void onClick(ClickEvent event) {
+//			Window.alert("Datum löschen?");
+//			
+//		}
+//
+//	}
 }
