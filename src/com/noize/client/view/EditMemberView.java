@@ -1,6 +1,8 @@
 package com.noize.client.view;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -12,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.noize.client.presenter.EditMemberPresenter.Display;
 
 public class EditMemberView extends Composite implements Display{
@@ -20,6 +23,8 @@ public class EditMemberView extends Composite implements Display{
 	private final TextBox firstName;
 	private final TextBox lastName;
 	private final TextBox email;
+	private final TextBox address;
+	private final DateBox birthdate;
 	private final Button saveButton;
 	private final Button cancelButton;
 	private final ListBox roles;
@@ -31,6 +36,12 @@ public class EditMemberView extends Composite implements Display{
 		firstName = new TextBox();
 		lastName = new TextBox();
 		email = new TextBox();
+		address = new TextBox();
+		DateTimeFormat format = DateTimeFormat.getFormat(PredefinedFormat.YEAR_MONTH_NUM_DAY);
+		birthdate = new DateBox();
+		birthdate.setFormat(new DateBox.DefaultFormat(format));
+		birthdate.getDatePicker().setYearAndMonthDropdownVisible(true);
+		birthdate.getDatePicker().setVisibleYearCount(180);
 		saveButton = new Button("Speichern");
 		cancelButton = new Button("Abbrechen");
 		roles = new ListBox();
@@ -52,8 +63,12 @@ public class EditMemberView extends Composite implements Display{
 		detailstable.setWidget(1, 1, firstName);
 		detailstable.setWidget(2, 0, new Label("Nachname"));
 		detailstable.setWidget(2, 1, lastName);
-		detailstable.setWidget(3, 0, new Label("Email"));
-		detailstable.setWidget(3, 1, email);
+		detailstable.setWidget(3, 0, new Label("Adresse"));
+		detailstable.setWidget(3, 1, address);
+		detailstable.setWidget(4, 0, new Label("Email"));
+		detailstable.setWidget(4, 1, email);
+		detailstable.setWidget(5, 0, new Label("Geburtsdatum"));
+		detailstable.setWidget(5, 1, birthdate);
 		
 		vpanel.add(detailstable);
 		vpanel.add(menupanel);
@@ -93,6 +108,16 @@ public class EditMemberView extends Composite implements Display{
 	@Override
 	public ListBox getRolePicker() {
 		return roles;
+	}
+
+	@Override
+	public HasValue<String> getAddress() {
+		return this.address;
+	}
+
+	@Override
+	public DateBox getBirthdate() {
+		return this.birthdate;
 	}
 	
 	

@@ -21,7 +21,7 @@ public class Member implements IsSerializable{
 	private Long id;
 	
 	@Persistent
-	private String role;
+	private int role;
 
 	@Persistent
 	private String firstName;
@@ -36,18 +36,17 @@ public class Member implements IsSerializable{
 	private String adress;
 	
 	@Persistent
-	private Date birthdate;
+	private String birthdate;
 	
+	public Member(){}
 	
-	public Member() {
-		
-	}
-	
-	public Member(String firstname, String lastname, String email,String role){
+	public Member(String firstname, String lastname, String email,int role,String address){
 		this.firstName = firstname;
 		this.lastName = lastname;
 		this.email = email;
 		this.role = role;
+		this.adress = address;
+		this.birthdate = birthdate.toString();
 	}
 	
 	public String getFirstName(){
@@ -74,39 +73,32 @@ public class Member implements IsSerializable{
 		this.email = str;
 	}
 	
-	public void setRole(String str){
-		this.role = str;
+	public void setAddress(String address){
+		this.adress = address;
+	}
+	
+	public void setBirthdate(String birthdate){
+		this.birthdate = birthdate;
+	}
+	
+	public void setRole(int val){
+		this.role = val;
 	}
 	
 	public String getEmail(){
 		return this.email;
 	}
 	
-//	public void addDay(Training date){
-//		trainingDay.add(date);
-//	}
-//	
-//	public List<Training> getTrainingDay(){
-//		return this.trainingDay;
-//	}
-//	
-//	public void setTrainingDay(List<Training> list){
-//		this.trainingDay = list;
-//	}
+	public int getRole(){
+		return this.role;
+	}
 	
-//	public boolean contains(Training t){
-//		for(Training tmp : trainingDay){
-//			if(tmp.getID().equals(t.getID()))
-//				return true;
-//		}
-//		return false;
-//	}
+	public String getAddress(){
+		return this.adress;
+	}
 	
-//	public MemberSmall getMemberSmall(){
-//		return this.smallmember;
-//	}
-//
-//	public void setMemberSmall(MemberSmall m){
-//		this.smallmember = m;
-//	}
+	public String getBirthDate(){
+		return this.birthdate;
+	}
+	
 }

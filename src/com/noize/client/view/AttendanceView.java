@@ -3,21 +3,15 @@ package com.noize.client.view;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -106,23 +100,23 @@ public class AttendanceView extends Composite implements Display{
 		return this.table;
 	}
 	
-	public class DateLabel extends Composite implements HasClickHandlers{
-		
-		private Label date;
-		
-		public DateLabel(String date) {
-			this.date = new Label(date);
-		}
-		
-		@Override
-		public Widget asWidget() {
-			return this;
-		}
-
-		@Override
-		public HandlerRegistration addClickHandler(ClickHandler handler) {
-			return addHandler(handler, ClickEvent.getType());
-		}
-	}
+//	public class DateLabel extends Composite implements HasClickHandlers{
+//		
+//		private Label date;
+//		
+//		public DateLabel(String date) {
+//			this.date = new Label(date);
+//		}
+//		
+//		@Override
+//		public Widget asWidget() {
+//			return this;
+//		}
+//
+//		@Override
+//		public HandlerRegistration addClickHandler(ClickHandler handler) {
+//			return addHandler(handler, ClickEvent.getType());
+//		}
+//	}
 
 }

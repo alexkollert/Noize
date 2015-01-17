@@ -13,8 +13,8 @@ import com.noize.shared.Training;
  * The async counterpart of <code>GreetingService</code>.
  */
 public interface DatabaseServiceAsync {
-	void addMember(String name, String lastname, String email,
-			String string, AsyncCallback<Member> callback);
+	void addMember(String name, String lastname, String email, int role,
+			String address, Date birthdate, AsyncCallback<Member> callback);
 	void deleteMember(ArrayList<Long> ids, AsyncCallback<Boolean> callback);
 	void getMembers(AsyncCallback<List<Member>> asyncCallback);
 	void updateMember(Member m, AsyncCallback<Boolean> callback);

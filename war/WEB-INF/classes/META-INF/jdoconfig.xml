@@ -6,6 +6,7 @@
    <persistence-manager-factory name="transactions-optional">
        <class>com.noize.shared.Member</class>
        <class>com.noize.shared.Training</class>
+       <class>com.noize.shared.MemberToTraining</class>
        <exclude-unlisted-classes/>
        <property name="javax.jdo.PersistenceManagerFactoryClass"
            value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>

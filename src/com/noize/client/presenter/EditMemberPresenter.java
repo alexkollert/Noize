@@ -1,9 +1,13 @@
 package com.noize.client.presenter;
 
+import java.text.ParseException;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,6 +15,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.noize.client.DatabaseServiceAsync;
 import com.noize.client.events.MemberUpdatedEvent;
 import com.noize.shared.Member;
@@ -28,6 +33,8 @@ public class EditMemberPresenter implements Presenter {
 		HasValue<String> getFirstName();
 		HasValue<String> getLastName();
 		HasValue<String> getEmail();
+		HasValue<String> getAddress();
+		DateBox getBirthdate();
 		ListBox getRolePicker();
 		Widget asWidget();
 	}
@@ -58,7 +65,9 @@ public class EditMemberPresenter implements Presenter {
 				EditMemberPresenter.this.display.getFirstName().setValue(member.getFirstName());
 				EditMemberPresenter.this.display.getLastName().setValue(member.getLastName());
 				EditMemberPresenter.this.display.getEmail().setValue(member.getEmail());
-				EditMemberPresenter.this.display.getRolePicker().setSelectedIndex(1); //FIXME
+				EditMemberPresenter.this.display.getRolePicker().setSelectedIndex(member.getRole()); 
+				EditMemberPresenter.this.display.getAddress().setValue(member.getAddress());
+				EditMemberPresenter.this.display.getBirthdate().setValue(DateTimeFormat.getFormat(PredefinedFormat.YEAR_MONTH_NUM_DAY).parse(member.getBirthDate()));
 			}
 		});
 	}
@@ -88,8 +97,11 @@ public class EditMemberPresenter implements Presenter {
 	private void doSave() {
 		member.setFirstName(display.getFirstName().getValue());
 		member.setLastName(display.getLastName().getValue());
+		member.setAddress(display.getAddress().getValue());
 		member.setEmail(display.getEmail().getValue());
-		member.setRole(display.getRolePicker().getValue(display.getRolePicker().getSelectedIndex()));
+		member.setRole(display.getRolePicker().getSelectedIndex());
+		String d = DateTimeFormat.getFormat(PredefinedFormat.YEAR_MONTH_NUM_DAY).format(display.getBirthdate().getValue());
+		member.setBirthdate(d);
 		
 		rpcService.updateMember(member, new AsyncCallback<Boolean>() {
 			

@@ -15,7 +15,7 @@ import com.noize.shared.Training;
  */
 @RemoteServiceRelativePath("/")
 public interface DatabaseService extends RemoteService {
-	Member addMember(String name, String lastname, String email, String string);
+	Member addMember(String name, String lastname, String email, int role,String address,Date birthdate);
 
 	boolean deleteMember(ArrayList<Long> ids);
 

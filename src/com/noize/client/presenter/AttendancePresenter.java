@@ -123,13 +123,6 @@ public class AttendancePresenter implements Presenter {
 			@Override
 			public void onSuccess(List<Training> result) {
 				days = result;
-				// ArrayList<String> list = new ArrayList<String>();
-				// for(int i = 0;i < result.size();i++){
-				// list.add(result.get(i).getDate());
-				// }
-				// days = list;
-				// display.setDays(result);
-				// ready = true;
 				cols = result.size();
 				for (int i = 0; i < result.size(); i++) {
 					display.getTable().setWidget(0, i + 1,
@@ -143,7 +136,6 @@ public class AttendancePresenter implements Presenter {
 				Window.alert("Fehler");
 			}
 		});
-		eventbus.fireEvent(new AppFreeEvent());
 	}
 
 	private void fetchMemberToTraining() {
@@ -202,6 +194,7 @@ public class AttendancePresenter implements Presenter {
 						display.getTable().setWidget(i, j, checkbox);
 					}
 				}
+				eventbus.fireEvent(new AppFreeEvent());
 			}
 
 			@Override

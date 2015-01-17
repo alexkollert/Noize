@@ -27,7 +27,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	
 	private static PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
-	public Member addMember(String firstname, String lastname, String email,String role) throws IllegalArgumentException {
+	public Member addMember(String firstname, String lastname, String email,int role,String address,Date birthdate) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 //		if (!FieldVerifier.isValidName(input)) {
 //			// If the input is not valid, throw an IllegalArgumentException back to
@@ -51,10 +51,12 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		    
 		PersistenceManager pm = getPersistenceManager();
 		pm.currentTransaction().begin();
-		Member m = new Member(firstname,lastname,email,role);
+		Member m = new Member(firstname,lastname,email,role,address);
+		SimpleDateFormat sdate = new SimpleDateFormat("dd-MM-yyyy"); 
+		String res = sdate.format(birthdate);
+		m.setBirthdate(res);
 		try {
 			pm.makePersistent(m);
-//			pm.makePersistent(ms);
 			pm.currentTransaction().commit();
 		}
 		catch(Exception e){
@@ -77,7 +79,6 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean updateMember(Member m) {
 		PersistenceManager pm = getPersistenceManager();
-//		pm.currentTransaction().begin();
 		try {
 			Long id = m.getId();
 			if(id != null){
@@ -106,6 +107,12 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 			for(Long id : ids){
 				Query q = pm.newQuery(Member.class, "id == " + id);
 				q.deletePersistentAll();
+			}
+			pm.currentTransaction().commit();
+			pm.currentTransaction().begin();
+			for(Long id : ids){
+				Query v = pm.newQuery(MemberToTraining.class, "mid == " + id);
+				v.deletePersistentAll();
 			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
