@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -62,19 +63,27 @@ public class AttendancePresenter implements Presenter {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				eventbus.fireEvent(new AppBusyEvent());
 				Date date = display.getDateBox().getValue();
-				rpcService.addTraining(date, new AsyncCallback<Boolean>() {
-
-					@Override
-					public void onSuccess(Boolean result) {
-						// History.fireCurrentHistoryState();
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Termin konnte nicht erstellt werden");
-					}
-				});
+				if(date != null){
+					rpcService.addTraining(date, new AsyncCallback<Boolean>() {
+	
+						@Override
+						public void onSuccess(Boolean result) {
+							eventbus.fireEvent(new AppFreeEvent());
+							History.fireCurrentHistoryState();
+						}
+	
+						@Override
+						public void onFailure(Throwable caught) {
+							eventbus.fireEvent(new AppFreeEvent());
+							Window.alert("Termin konnte nicht erstellt werden");
+						}
+					});
+				}
+				else{
+					eventbus.fireEvent(new AppFreeEvent());
+				}
 			}
 		});
 		display.getTable().addClickHandler(new ClickHandler() {
@@ -99,6 +108,9 @@ public class AttendancePresenter implements Presenter {
 								
 							}
 						});
+					}
+					else{
+						History.fireCurrentHistoryState();
 					}
 						
 				}
@@ -250,24 +262,4 @@ public class AttendancePresenter implements Presenter {
 		}
 	}
 
-//	public class DateLabel extends Composite implements ClickHandler{
-//
-//		private Label date;
-//
-//		public DateLabel(String date) {
-//			this.date = new Label(date);
-//		}
-//
-//		@Override
-//		public Widget asWidget() {
-//			return this;
-//		}
-//
-//		@Override
-//		public void onClick(ClickEvent event) {
-//			Window.alert("Datum löschen?");
-//			
-//		}
-//
-//	}
 }

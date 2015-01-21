@@ -1,7 +1,5 @@
 package com.noize.shared;
 
-import java.util.Date;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -22,6 +20,9 @@ public class Member implements IsSerializable{
 	
 	@Persistent
 	private int role;
+	
+	@Persistent
+	private int job;
 
 	@Persistent
 	private String firstName;
@@ -40,11 +41,12 @@ public class Member implements IsSerializable{
 	
 	public Member(){}
 	
-	public Member(String firstname, String lastname, String email,int role,String address){
+	public Member(String firstname, String lastname, String email,int role,String address,int job){
 		this.firstName = firstname;
 		this.lastName = lastname;
 		this.email = email;
 		this.role = role;
+		this.job = job;
 		this.adress = address;
 		this.birthdate = birthdate.toString();
 	}
@@ -85,6 +87,10 @@ public class Member implements IsSerializable{
 		this.role = val;
 	}
 	
+	public void setJob(int val){
+		this.job = val;
+	}
+	
 	public String getEmail(){
 		return this.email;
 	}
@@ -99,6 +105,10 @@ public class Member implements IsSerializable{
 	
 	public String getBirthDate(){
 		return this.birthdate;
+	}
+	
+	public int getJob(){
+		return this.job;
 	}
 	
 }

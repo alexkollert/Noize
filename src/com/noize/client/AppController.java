@@ -20,11 +20,13 @@ import com.noize.client.events.MemberUpdatedEvent;
 import com.noize.client.events.MemberUpdatedEventHandler;
 import com.noize.client.presenter.AttendancePresenter;
 import com.noize.client.presenter.EditMemberPresenter;
+import com.noize.client.presenter.FinancesPresenter;
 import com.noize.client.presenter.MembersPresenter;
 import com.noize.client.presenter.Presenter;
 import com.noize.client.view.AttendanceView;
 import com.noize.client.view.BusyIndicatorView;
 import com.noize.client.view.EditMemberView;
+import com.noize.client.view.FinancesView;
 import com.noize.client.view.MembersView;
 import com.noize.client.view.NavBarView;
 
@@ -60,6 +62,9 @@ public class AppController implements Presenter,ValueChangeHandler<String> {
 			}
 			else if (token.equals("presence")) {
 				presenter = new AttendancePresenter(rpcService, eventbus, new AttendanceView());
+			}
+			else if(token.equals("finances")){
+				presenter = new FinancesPresenter(rpcService, eventbus, new FinancesView());
 			}
 			if(presenter != null){
 				presenter.go(mainContainer);

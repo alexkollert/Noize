@@ -26,6 +26,13 @@ public class NavBarView extends Composite {
 				History.newItem("presence");
 			}
 		});
+		navbar.addItem("Finanzen", new Command() {
+			
+			@Override
+			public void execute() {
+				History.newItem("finances");
+			}
+		});
 		initWidget(navbar);
 	}
 	

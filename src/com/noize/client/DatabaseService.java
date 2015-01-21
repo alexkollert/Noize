@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.noize.shared.FinanceMonth;
 import com.noize.shared.Member;
+import com.noize.shared.MemberToFinances;
 import com.noize.shared.MemberToTraining;
 import com.noize.shared.Training;
 
@@ -15,7 +17,7 @@ import com.noize.shared.Training;
  */
 @RemoteServiceRelativePath("/")
 public interface DatabaseService extends RemoteService {
-	Member addMember(String name, String lastname, String email, int role,String address,Date birthdate);
+	Member addMember(String name, String lastname, String email, int role,String address,Date birthdate,int job);
 
 	boolean deleteMember(ArrayList<Long> ids);
 
@@ -40,4 +42,15 @@ public interface DatabaseService extends RemoteService {
 	void deleteMemberToTraining(Long id);
 	
 	void deleteTraining(Long id);
+	
+	List<MemberToFinances> getMemberToFinancesAll();
+	
+	void addMemberToFinances(MemberToFinances mtf);
+	
+	void deleteMemberToFinances(Long id);
+	
+	void addNewFinancesYear(int year);
+	
+	List<FinanceMonth> getFinancesMonthAll();
+	
 }

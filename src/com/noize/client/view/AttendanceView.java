@@ -86,37 +86,9 @@ public class AttendanceView extends Composite implements Display{
 		}
 	}
 
-//	private void fillTable() {
-//		GWT.log("fillTabel called");
-//		for(int i = 1;i < rows;i++){
-//			for(int j = 1;j < cols;j++){
-//				table.setWidget(i, j, new CheckBox());
-//			}
-//		}
-//	}
-
 	@Override
 	public FlexTable getTable() {
 		return this.table;
 	}
 	
-//	public class DateLabel extends Composite implements HasClickHandlers{
-//		
-//		private Label date;
-//		
-//		public DateLabel(String date) {
-//			this.date = new Label(date);
-//		}
-//		
-//		@Override
-//		public Widget asWidget() {
-//			return this;
-//		}
-//
-//		@Override
-//		public HandlerRegistration addClickHandler(ClickHandler handler) {
-//			return addHandler(handler, ClickEvent.getType());
-//		}
-//	}
-
 }

@@ -1,7 +1,5 @@
 package com.noize.client.presenter;
 
-import java.text.ParseException;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -35,6 +33,7 @@ public class EditMemberPresenter implements Presenter {
 		HasValue<String> getEmail();
 		HasValue<String> getAddress();
 		DateBox getBirthdate();
+		ListBox getJobPicker();
 		ListBox getRolePicker();
 		Widget asWidget();
 	}
