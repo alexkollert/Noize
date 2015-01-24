@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.noize.shared.FinanceMonth;
+import com.noize.shared.FinanceYear;
 import com.noize.shared.Member;
 import com.noize.shared.MemberToFinances;
 import com.noize.shared.MemberToTraining;
@@ -43,7 +44,7 @@ public interface DatabaseService extends RemoteService {
 	
 	void deleteTraining(Long id);
 	
-	List<MemberToFinances> getMemberToFinancesAll();
+	List<MemberToFinances> getMemberToFinances();
 	
 	void addMemberToFinances(MemberToFinances mtf);
 	
@@ -51,6 +52,8 @@ public interface DatabaseService extends RemoteService {
 	
 	void addNewFinancesYear(int year);
 	
-	List<FinanceMonth> getFinancesMonthAll();
+	List<FinanceMonth> getFinancesMonths();
+	
+	List<FinanceYear> getFinanceYears();
 	
 }

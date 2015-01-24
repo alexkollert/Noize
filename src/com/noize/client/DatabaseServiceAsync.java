@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.noize.shared.FinanceMonth;
+import com.noize.shared.FinanceYear;
 import com.noize.shared.Member;
 import com.noize.shared.MemberToFinances;
 import com.noize.shared.MemberToTraining;
@@ -30,9 +31,10 @@ public interface DatabaseServiceAsync {
 	void getMemberToTrainingAll(AsyncCallback<List<MemberToTraining>> callback);
 	void deleteMemberToTraining(Long id, AsyncCallback<Void> callback);
 	void deleteTraining(Long id, AsyncCallback<Void> callback);
-	void getMemberToFinancesAll(AsyncCallback<List<MemberToFinances>> callback);
+	void getMemberToFinances(AsyncCallback<List<MemberToFinances>> callback);
 	void addMemberToFinances(MemberToFinances mtf, AsyncCallback<Void> callback);
 	void deleteMemberToFinances(Long id, AsyncCallback<Void> callback);
 	void addNewFinancesYear(int year, AsyncCallback<Void> callback);
-	void getFinancesMonthAll(AsyncCallback<List<FinanceMonth>> callback);
+	void getFinancesMonths(AsyncCallback<List<FinanceMonth>> callback);
+	void getFinanceYears(AsyncCallback<List<FinanceYear>> callback);
 }

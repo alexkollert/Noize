@@ -226,8 +226,8 @@ public class AttendancePresenter implements Presenter {
 		Long mid = members.get(rowIndex - 1).getId();
 		Long tid = days.get(colIndex - 1).getID();
 		if (c.getValue()) {
-			MemberToTraining mtt = new MemberToTraining(mid, tid);
-			rpcService.addMemberToTraining(mtt, new AsyncCallback<Void>() {
+			MemberToTraining mt = new MemberToTraining(mid, tid);
+			rpcService.addMemberToTraining(mt, new AsyncCallback<Void>() {
 
 				@Override
 				public void onSuccess(Void result) {

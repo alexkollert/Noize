@@ -8,35 +8,26 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 @PersistenceCapable
-public class FinanceMonth implements IsSerializable{
+public class FinanceYear implements IsSerializable{
 
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
 	private Long id;
 	
 	@Persistent
-	private int month;
+	private int year;
 	
-	@Persistent
-	private Integer year;
+	public FinanceYear(){}
 	
-	public FinanceMonth() {
+	public FinanceYear(int year){
+		this.year = year;
 	}
 	
-	public FinanceMonth(Integer month,Integer year){
-		this.month = month;
-		this.year = year;
+	public int getYear(){
+		return this.year;
 	}
 	
 	public Long getId(){
 		return this.id;
-	}
-	
-	public Integer getName(){
-		return this.month;
-	}
-	
-	public Integer getYear(){
-		return this.year;
 	}
 }

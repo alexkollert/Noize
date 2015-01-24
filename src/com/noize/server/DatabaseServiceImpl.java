@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
@@ -15,6 +14,7 @@ import javax.jdo.Query;
 
 import com.noize.client.DatabaseService;
 import com.noize.shared.FinanceMonth;
+import com.noize.shared.FinanceYear;
 import com.noize.shared.Member;
 import com.noize.shared.MemberToFinances;
 import com.noize.shared.MemberToTraining;
@@ -115,6 +115,12 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 			pm.currentTransaction().begin();
 			for(Long id : ids){
 				Query v = pm.newQuery(MemberToTraining.class, "mid == " + id);
+				v.deletePersistentAll();
+			}
+			pm.currentTransaction().commit();
+			pm.currentTransaction().begin();
+			for(Long id : ids){
+				Query v = pm.newQuery(MemberToFinances.class, "mid == " + id);
 				v.deletePersistentAll();
 			}
 			pm.currentTransaction().commit();
@@ -289,6 +295,10 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 			Query v = pm.newQuery(MemberToTraining.class,"tid == " + id);
 			v.deletePersistentAll();
 			pm.currentTransaction().commit();
+			pm.currentTransaction().begin();
+			Query w = pm.newQuery(MemberToFinances.class,"tid == " + id);
+			v.deletePersistentAll();
+			pm.currentTransaction().commit();
 		}
 		finally{
 			pm.close();
@@ -296,11 +306,18 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<MemberToFinances> getMemberToFinancesAll() {
+	public List<MemberToFinances> getMemberToFinances() {
 		List<MemberToFinances> list = new ArrayList<>();
 		PersistenceManager pm = getPersistenceManager();
+//		pm.currentTransaction().begin();
 		Extent<MemberToFinances> e = pm.getExtent(MemberToFinances.class);
 		try {
+//			for(FinanceMonth m : months){
+//				Query q = pm.newQuery(MemberToFinances.class, "monthid == " + m.getId());
+//				List<MemberToFinances> res = (List<MemberToFinances>) q.execute();
+//				list.add(res.get(0));
+//			}
+//			pm.currentTransaction().commit();
 			Iterator<MemberToFinances> iter = e.iterator();
 			while(iter.hasNext()){
 				list.add((MemberToFinances) iter.next());
@@ -339,7 +356,6 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		finally{
 			pm.close();
 		}
-		
 	}
 
 	@Override
@@ -357,27 +373,42 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		months[9] = new FinanceMonth(10,year);
 		months[10] = new FinanceMonth(11,year);
 		months[11] = new FinanceMonth(12,year);
-//		try{
-			PersistenceManager pm = getPersistenceManager();
-//			pm.currentTransaction().begin();
-			pm.makePersistentAll(months);	//,feb,mar,apr,mai,jun,jul,aug,sep,okt,nov,dec);
-//			pm.currentTransaction().commit();
-			pm.close();
-//		}
-//		finally{
-//			pm.close();
-//		}
+		FinanceYear fm = new FinanceYear(year);
+		PersistenceManager pm = getPersistenceManager();
+		pm.makePersistentAll(months);	//,feb,mar,apr,mai,jun,jul,aug,sep,okt,nov,dec);
+		pm.close();
+		PersistenceManager pma = getPersistenceManager();
+		pma.makePersistent(fm);
+		pma.close();
 	}
 
 	@Override
-	public List<FinanceMonth> getFinancesMonthAll() {
-		List<FinanceMonth> list = new ArrayList<>();
+	public List<FinanceMonth> getFinancesMonths() {
+		List<FinanceMonth> list = new ArrayList<FinanceMonth>();
 		PersistenceManager pm = getPersistenceManager();
 		Extent<FinanceMonth> e = pm.getExtent(FinanceMonth.class);
 		try {
 			Iterator<FinanceMonth> iter = e.iterator();
 			while(iter.hasNext()){
 				list.add((FinanceMonth) iter.next());
+			}
+		}
+		finally {
+			e.closeAll();
+			pm.close();
+		}
+		return list;
+	}
+
+	@Override
+	public List<FinanceYear> getFinanceYears() {
+		List<FinanceYear> list = new ArrayList<>();
+		PersistenceManager pm = getPersistenceManager();
+		Extent<FinanceYear> e = pm.getExtent(FinanceYear.class);
+		try {
+			Iterator<FinanceYear> iter = e.iterator();
+			while(iter.hasNext()){
+				list.add((FinanceYear) iter.next());
 			}
 		}
 		finally {

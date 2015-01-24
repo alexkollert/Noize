@@ -7,6 +7,9 @@
        <class>com.noize.shared.Member</class>
        <class>com.noize.shared.Training</class>
        <class>com.noize.shared.MemberToTraining</class>
+       <class>com.noize.shared.MemberToFinances</class>
+       <class>com.noize.shared.FinanceMonth</class>
+       <class>com.noize.shared.FinanceYear</class>
        <exclude-unlisted-classes/>
        <property name="javax.jdo.PersistenceManagerFactoryClass"
            value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
