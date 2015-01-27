@@ -11,6 +11,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.noize.client.DatabaseServiceAsync;
@@ -90,7 +91,15 @@ public class MembersPresenter implements Presenter{
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Löschen fehlgeschlagen");
+				 if (caught instanceof InvocationException) {
+			            InvocationException ie = (InvocationException) caught;
+			            if(ie.getMessage().contains("j_spring_security_check"))
+			            {
+			                Window.alert("Session is timed out. Please login again");
+			                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+			                return;
+			            }
+			        }
 			}
 
 			@Override
@@ -125,7 +134,15 @@ public class MembersPresenter implements Presenter{
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Server Error");
+				 if (caught instanceof InvocationException) {
+			            InvocationException ie = (InvocationException) caught;
+			            if(ie.getMessage().contains("j_spring_security_check"))
+			            {
+			                Window.alert("Session is timed out. Please login again");
+			                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+			                return;
+			            }
+			        }
 			}
 		});
 		

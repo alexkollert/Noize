@@ -18,42 +18,40 @@ import com.noize.shared.Training;
  */
 @RemoteServiceRelativePath("/")
 public interface DatabaseService extends RemoteService {
-	Member addMember(String name, String lastname, String email, int role,String address,Date birthdate,int job);
+	Member addMember(String name, String lastname, String email, int role,String address,Date birthdate,int job) ;
 
-	boolean deleteMember(ArrayList<Long> ids);
+	boolean deleteMember(ArrayList<Long> ids) ;
 
 	List<Member> getMembers();
 	
 	boolean updateMember(Member m);
 	
-	Member getMember(Long id);
+	Member getMember(Long id) ;
 	
-	boolean addTraining(Date t);
+	boolean addTraining(Date t) ;
 	
-	List<Training> getTrainingAll();
+	List<Training> getTrainingAll() ;
 	
-//	void storeDayinMember(Member m);
+	Training getTraining(String id) ;
 	
-	Training getTraining(String id);
+	void addMemberToTraining(MemberToTraining mtt) ;
 	
-	void addMemberToTraining(MemberToTraining mtt);
+	List<MemberToTraining> getMemberToTrainingAll() ;
 	
-	List<MemberToTraining> getMemberToTrainingAll();
+	void deleteMemberToTraining(Long id) ;
 	
-	void deleteMemberToTraining(Long id);
+	void deleteTraining(Long id) ;
 	
-	void deleteTraining(Long id);
+	List<MemberToFinances> getMemberToFinances() ;
 	
-	List<MemberToFinances> getMemberToFinances();
+	void addMemberToFinances(MemberToFinances mtf) ;
 	
-	void addMemberToFinances(MemberToFinances mtf);
+	void deleteMemberToFinances(Long id) ;
 	
-	void deleteMemberToFinances(Long id);
+	void addNewFinancesYear(int year) ;
 	
-	void addNewFinancesYear(int year);
+	List<FinanceMonth> getFinancesMonths() ;
 	
-	List<FinanceMonth> getFinancesMonths();
-	
-	List<FinanceYear> getFinanceYears();
+	List<FinanceYear> getFinanceYears() ;
 	
 }

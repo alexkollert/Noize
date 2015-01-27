@@ -12,6 +12,9 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.noize.client.DatabaseService;
 import com.noize.shared.FinanceMonth;
 import com.noize.shared.FinanceYear;
@@ -417,5 +420,5 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements
 		}
 		return list;
 	}
-	
+
 }

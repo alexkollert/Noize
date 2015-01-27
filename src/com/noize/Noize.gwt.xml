@@ -18,7 +18,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
-  <!-- Other module inherits                                      -->
+  <!-- Other module inherits     
+                                   -->
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.noize.client.Noize'/>
@@ -26,9 +27,6 @@
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
   <source path='shared'/>
- <!--  <source path='view'/>
-  <source path='presenter'/>
-  <source path='events'/> -->
 
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>

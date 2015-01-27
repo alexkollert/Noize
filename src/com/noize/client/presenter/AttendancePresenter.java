@@ -3,6 +3,7 @@ package com.noize.client.presenter;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -10,6 +11,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
@@ -55,7 +57,9 @@ public class AttendancePresenter implements Presenter {
 		this.rpcService = rpcService;
 		this.eventbus = eventbus;
 		this.display = view;
+		eventbus.fireEvent(new AppBusyEvent());
 		bind();
+		eventbus.fireEvent(new AppFreeEvent());
 	}
 
 	private void bind() {
@@ -63,26 +67,28 @@ public class AttendancePresenter implements Presenter {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				eventbus.fireEvent(new AppBusyEvent());
 				Date date = display.getDateBox().getValue();
 				if(date != null){
 					rpcService.addTraining(date, new AsyncCallback<Boolean>() {
 	
 						@Override
 						public void onSuccess(Boolean result) {
-							eventbus.fireEvent(new AppFreeEvent());
 							History.fireCurrentHistoryState();
 						}
 	
 						@Override
 						public void onFailure(Throwable caught) {
-							eventbus.fireEvent(new AppFreeEvent());
-							Window.alert("Termin konnte nicht erstellt werden");
+							 if (caught instanceof InvocationException) {
+						            InvocationException ie = (InvocationException) caught;
+						            if(ie.getMessage().contains("j_spring_security_check"))
+						            {
+						                Window.alert("Session is timed out. Please login again");
+						                Window.open(GWT.getHostPageBaseURL() + "login.html", "_self", null);
+						                return;
+						            }
+						      }
 						}
 					});
-				}
-				else{
-					eventbus.fireEvent(new AppFreeEvent());
 				}
 			}
 		});
@@ -98,7 +104,15 @@ public class AttendancePresenter implements Presenter {
 
 							@Override
 							public void onFailure(Throwable caught) {
-								// TODO Auto-generated method stub
+								 if (caught instanceof InvocationException) {
+							            InvocationException ie = (InvocationException) caught;
+							            if(ie.getMessage().contains("j_spring_security_check"))
+							            {
+							                Window.alert("Session is timed out. Please login again");
+							                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+							                return;
+							            }
+							        }
 								
 							}
 
@@ -145,7 +159,15 @@ public class AttendancePresenter implements Presenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Fehler");
+				 if (caught instanceof InvocationException) {
+			            InvocationException ie = (InvocationException) caught;
+			            if(ie.getMessage().contains("j_spring_security_check"))
+			            {
+			                Window.alert("Session is timed out. Please login again");
+			                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+			                return;
+			            }
+			        }
 			}
 		});
 	}
@@ -162,7 +184,15 @@ public class AttendancePresenter implements Presenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Fehler beim Laden der Relationen");
+						 if (caught instanceof InvocationException) {
+					            InvocationException ie = (InvocationException) caught;
+					            if(ie.getMessage().contains("j_spring_security_check"))
+					            {
+					                Window.alert("Session is timed out. Please login again");
+					                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+					                return;
+					            }
+					        }
 					}
 				});
 
@@ -236,7 +266,15 @@ public class AttendancePresenter implements Presenter {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					Window.alert("Fehler beim Speichern");
+					 if (caught instanceof InvocationException) {
+				            InvocationException ie = (InvocationException) caught;
+				            if(ie.getMessage().contains("j_spring_security_check"))
+				            {
+				                Window.alert("Session is timed out. Please login again");
+				                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+				                return;
+				            }
+				        }
 				}
 			});
 		} else {
@@ -253,7 +291,15 @@ public class AttendancePresenter implements Presenter {
 
 									@Override
 									public void onFailure(Throwable caught) {
-										Window.alert("Fehler beim Löschen");
+										 if (caught instanceof InvocationException) {
+									            InvocationException ie = (InvocationException) caught;
+									            if(ie.getMessage().contains("j_spring_security_check"))
+									            {
+									                Window.alert("Session is timed out. Please login again");
+									                Window.open(GWT.getHostPageBaseURL() + "login.jsp", "_self", null);
+									                return;
+									            }
+									        }
 									}
 								});
 					}
